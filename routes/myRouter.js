@@ -15,8 +15,31 @@ const upload = multer({
     storage:storage
 })
 
+//-----------user------------// home = product + cart + checkout + payment
+
 router.get('/',(req,res)=>{
-    res.render('index')
+    Product.find({}).exec().then(doc => {
+        res.render('index',{products:doc})
+    }).catch(err => {console.error('Error:', err);});
+})
+
+router.get('/:id',(req,res)=>{
+    const product_id = req.params.id
+    Product.findOne({_id:product_id}).exec().then(doc => {
+        res.render('product',{product:doc})
+    }).catch(err => {console.error('Error:', err);});
+})
+
+//-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
+
+router.get('/manage',(req,res)=>{
+    Product.find({}).exec().then(doc => {
+        res.render('manage',{products:doc})
+    }).catch(err => {console.error('Error:', err);});
+})
+
+router.get('/frminsert',(req,res)=>{
+    res.render('frminsert')
 })
 
 router.post('/insert',upload.single("image"),(req,res)=>{
@@ -26,14 +49,16 @@ router.post('/insert',upload.single("image"),(req,res)=>{
         image:req.file.filename,
         description:req.body.description
     })
-   try{
-    Product.seveProduct(data)
-    console.log(data)
-    // res.send('save data success')
-    res.redirect('/')
-   }catch(err){
-    console.error('Error saving user:', err);
-   }
+    try{
+        Product.seveProduct(data)
+        res.redirect('/manage')
+    }catch(err){console.error('Error saving user:', err);}
+})
+
+router.get('/delete/:id',(req,res)=>{
+    Product.findByIdAndDelete(req.params.id,{useeFindAndModify:false}).exec().then(doc => {
+        res.redirect('/manage')
+    }).catch(err => {console.error('Error:', err);});
 })
 
 module.exports = router
