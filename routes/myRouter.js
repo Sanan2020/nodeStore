@@ -23,11 +23,12 @@ router.get('/',(req,res)=>{
     }).catch(err => {console.error('Error:', err);});
 })
 
-router.get('/:id',(req,res)=>{
+router.get('/detail/:id',(req,res)=>{
     const product_id = req.params.id
     Product.findOne({_id:product_id}).exec().then(doc => {
         res.render('product',{product:doc})
     }).catch(err => {console.error('Error:', err);});
+    
 })
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
@@ -53,6 +54,27 @@ router.post('/insert',upload.single("image"),(req,res)=>{
         Product.seveProduct(data)
         res.redirect('/manage')
     }catch(err){console.error('Error saving user:', err);}
+})
+
+router.post('/frmedit',(req,res)=>{
+    const edit_id = req.body.edit_id
+    Product.findOne({_id:edit_id}).exec().then(doc => {
+        res.render('frmedit',{product:doc})
+    }).catch(err => {console.error('Error:', err);});
+})
+
+router.post('/update',(req,res)=>{
+    const update_id = req.body.update_id
+    let data = {
+        name:req.body.name,
+        price:req.body.price,
+        // image:req.file.filename,
+        description:req.body.description
+    }
+    console.log(data)
+    Product.findByIdAndUpdate(update_id,data,{useeFindAndModify:false}).exec().then(doc => {
+        res.redirect('/manage')
+    }).catch(err => {console.error('Error:', err);});
 })
 
 router.get('/delete/:id',(req,res)=>{
