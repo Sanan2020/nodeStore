@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome Icons CDN -->
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> -->
+
+    <style>
+        body {
+            text-align: center;
+        }
+
+        .oder-data {
+            display: flex;
+            justify-content: space-around;
+        }
+        .oder-mt{
+            margin-top: 10px;
+        }
+        /* เริ่ม 767*/
+        @media (max-width: 767px) {
+            .oder-data {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar (App Bar) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Modern Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Checkout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="scanner-container">
+        <div class="container mt-5" style="background: #f1eeee; padding: 10px;">
+            <div class="oder-data">
+                <div class="oder-mt">
+                    <label>เลขใบสั่งซื้อ</label><br>
+                    <strong>21528</strong>
+                </div>
+                <div class="oder-mt">
+                    <label>สั่งสินค้าวันที่</label><br>
+                    <strong>มกราคม 12, 2025</strong>
+                </div>
+                <div class="oder-mt">
+                    <label>อีเมล</label><br>
+                    <strong>example@gmail.com</strong>
+                </div>
+                <div class="oder-mt">
+                    <label>ยอดที่ต้องชำระ</label><br>
+                    <strong>฿251.00</strong>
+                </div>
+                <div class="oder-mt">
+                    <label>วิธีการชำระเงิน</label><br>
+                    <strong>PromptPay</strong>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="mt-5">สแกน QR เพื่อชำระเงิน</h5>
+        <div class="scanner">
+            <!-- Placeholder for Camera or QR Scanner -->
+            <video id="qr-video" class="qr-video" autoplay></video>
+        </div>
+        <div class="output">
+            <a class="btn btn-primary" href="payment.html" style="text-decoration: none;">Download QR</a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

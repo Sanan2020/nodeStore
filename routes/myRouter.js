@@ -32,6 +32,23 @@ router.get('/detail/:id',(req,res)=>{
 })
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
+router.get('/login',(req,res)=>{
+    res.render('login')
+})
+
+router.post('/login',(req,res)=>{
+    const username = req.body.username
+    const password = req.body.password
+    const timeExpire = 1000
+    console.log(req.body.username)
+    console.log(req.body.password)
+    
+    if(username === "admin" && password === "123"){
+        res.redirect('/manage')
+    }else{
+        // res.redirect('login')
+    }
+})
 
 router.get('/manage',(req,res)=>{
     Product.find({}).exec().then(doc => {
@@ -82,5 +99,33 @@ router.get('/delete/:id',(req,res)=>{
         res.redirect('/manage')
     }).catch(err => {console.error('Error:', err);});
 })
+
+
+//--------------TEST-API-----------------//
+// testSignup
+router.post('/testAPI', (req, res) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    console.log("u:"+username+" e:"+email+" p"+password)
+    res.send(`User created with username: ${username} and email: ${email} and password: ${password}`);
+});
+
+//testLogin
+router.post('/testLogin', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    if (email === "user@example.com" && password === "password123") {
+        console.log("e:"+email+" p"+password)
+        res.send(`Welcome email: ${email} and password: ${password}`);
+    }
+    return;
+});
+
+//testForgot
+router.post('/testForgot', (req, res) => {
+    const email = req.body.email;
+    console.log("email: "+email)
+});
 
 module.exports = router
