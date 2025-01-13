@@ -18,6 +18,7 @@ const upload = multer({
 //-----------user------------// home = product + cart + checkout + payment
 
 router.get('/',(req,res)=>{
+    // res.render('navbar')
     Product.find({}).exec().then(doc => {
         res.render('index',{products:doc})
     }).catch(err => {console.error('Error:', err);});
@@ -37,16 +38,18 @@ router.get('/login',(req,res)=>{
 })
 
 router.post('/login',(req,res)=>{
-    const username = req.body.username
-    const password = req.body.password
+    const email = req.body.email;
+    const password = req.body.password;
     const timeExpire = 1000
-    console.log(req.body.username)
-    console.log(req.body.password)
+    console.log(email)
+    console.log(password)
     
-    if(username === "admin" && password === "123"){
+    if(email === "admin@n" && password === "123"){
         res.redirect('/manage')
+        console.log('if')
     }else{
-        // res.redirect('login')
+        res.redirect('login')
+        console.log('else')
     }
 })
 
@@ -103,26 +106,24 @@ router.get('/delete/:id',(req,res)=>{
 
 //--------------TEST-API-----------------//
 // testSignup
+router.get('/signup', (req, res) => {
+    res.render('signup')
+});
+
 router.post('/testAPI', (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
-    console.log("u:"+username+" e:"+email+" p"+password)
+    console.log("u:"+username+" e:"+email+" p:"+password)
     res.send(`User created with username: ${username} and email: ${email} and password: ${password}`);
 });
 
-//testLogin
-router.post('/testLogin', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    if (email === "user@example.com" && password === "password123") {
-        console.log("e:"+email+" p"+password)
-        res.send(`Welcome email: ${email} and password: ${password}`);
-    }
-    return;
+//testForgot
+router.get('/forgot', (req, res) => {
+   res.render('forgot')
 });
 
-//testForgot
+
 router.post('/testForgot', (req, res) => {
     const email = req.body.email;
     console.log("email: "+email)
