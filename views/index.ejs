@@ -190,11 +190,15 @@
                 <% Object.values(products).forEach(function(item){ %>
                 <div class="col">
                     <div class="card category-card">
+
+                        <a href="/detail/<%= item._id %>">
                         <img src="image/numsod.jpg" class="card-img-top" alt="Category Image" width="" height="">
+                    </a>
+
                         <div class="card-body">
                             <h5 class="card-title"><%= item.name %></h5>
                             <div class="custom-category">
-                                <button>Add to Cart</button>
+                                <button onclick="add()">Add to Cart</button>
                                 <span class="card-text text-muted">฿<%= item.price %></span>
                             </div>
                         </div>
@@ -204,7 +208,9 @@
             </div>
         </div>
 
-
+<script>
+    
+</script>
             <!-- Product Listing -->
     <div class="container mt-5">
         <div>
@@ -224,7 +230,11 @@
             <% Object.values(products).forEach(function(item){ %>
             <div class="col filterDiv pro" th:each="product : ${products}">
                 <div class="card product-card">
+
+                    <a href="/detail/<%= item._id %>">
                     <img src="image/choccolate.jpg" class="product-img card-img-top" alt="Product Image">
+                </a>
+                    
                     <div class="card-body" style="text-align: left;">
                         <h5 class="card-title" th:text="${product.name}"><%= item.name %></h5>
                         <p class="card-text" th:text="${product.description}"><%= item.description %></p>
@@ -356,5 +366,6 @@
         </div>
     </article>
 
+    <%- include('footer') %>
 </body>
 </html>
