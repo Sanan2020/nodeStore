@@ -16,9 +16,14 @@ const upload = multer({
 })
 
 //-----------user------------// home = product + cart + checkout + payment
+router.get('/cart',(req,res)=>{
+    // const items_id = req.params._id
+    // console.log(items_id);
+ 
+        res.render('cart')
+})
 
 router.get('/',(req,res)=>{
-    // res.render('navbar')
     Product.find({}).exec().then(doc => {
         res.render('index',{products:doc})
     }).catch(err => {console.error('Error:', err);});
