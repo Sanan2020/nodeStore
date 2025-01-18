@@ -231,7 +231,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mt-4">
 
             <% Object.values(products).forEach(function(item){ %>
-            <div class="col filterDiv pro" th:each="product : ${products}">
+            <div class="col filterDiv pro">
                 <div class="card product-card">
 
                     <a href="/detail/<%= item._id %>">
@@ -239,14 +239,13 @@
                 </a>
                     
                     <div class="card-body" style="text-align: left;">
-                        <h5 class="card-title" th:text="${product.name}"><%= item.name %></h5>
-                        <p class="card-text" th:text="${product.description}"><%= item.description %></p>
-                        <p class="card-text text-muted" th:text="${'Price: ' + ${product.price} + ' USD'}"></p>
+                        <h5 class="card-title"><%= item.name %></h5>
+                        <p class="card-text"><%= item.description %></p>
+                        <p class="card-text text-muted"></p>
                         <div class="custom-product">
-                            <a onclick="addtocart('<%= item._id %>');" class="btn btn-outline-dark">Add to
-                                cart!!</a>
-                            <span th:href="@{/products/{id}/buy(id=${product.id})}"
-                                class="card-text text-muted">฿<%= item.price %></span></div>
+                            <!-- <a onclick="addtocart('<%= item._id %>');" class="btn btn-outline-dark">Add tocart!!</a> -->
+                            <a onclick="addTest('<%= JSON.stringify(item) %>');" class="btn btn-outline-dark">Add tocart!!</a>
+                            <span class="card-text text-muted">฿<%= item.price %></span></div>
                     </div>
                 </div>
             </div>

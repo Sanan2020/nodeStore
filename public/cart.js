@@ -1,34 +1,9 @@
-// pro =200;
+function addTest(obj){
+  console.log(obj['_id']);
 
-// $(document).ready(function() {
-//    // $('#count').html('pass');
+}
 
-//     // เมื่อกดปุ่ม <a> (id = showValueButton)
-//     $('#showValueButton').click(function() {
-//       //  event.preventDefault();  // ป้องกันการทำงานปกติของลิงก์
 
-//         // อ่านค่าปัจจุบันจาก localStorage
-//         let count = parseInt(localStorage.getItem('count')) || 0;
-
-//         // เพิ่มค่าทีละ 1
-//         count += 1;
-//         // pro+=1;
-//         // เก็บค่าใหม่ใน localStorage
-//         localStorage.setItem('count', count);
-
-//         // อัปเดตค่าที่แสดงใน <div id="count">
-//         $('#count').html(count);
-
-//         // $('#pro').html(pro);
-//     });
-
-//     $('#reset').click(function(event) {
-//       localStorage.clear();
-//     });
-
-//     ///cart
-   
-// });
 function processSwal(){
   let timerInterval;
 Swal.fire({
@@ -51,7 +26,7 @@ Swal.fire({
   /* Read more about handling dismissals below */
   if (result.dismiss === Swal.DismissReason.timer) {
     console.log("I was closed by the timer");
-    $('#count').html(cart.length);
+    // $('#count').html(cart.length);
   }
 });
 
@@ -61,26 +36,50 @@ Swal.fire({
 var cart=[];
 function addtocart(value_id){
   processSwal();
-  // console.log(value_id);
+  // // console.log(value_id);
 
+  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || []; // อ่านตะกร้าจาก localStorage หรือเป็น array ว่าง
   var pass =true;
-  for(let i=0;i<cart.length;i++){
-    if(value_id == cart[i].id){
-      cart[i].count ++;
+  // console.log(cartLocal[0].count);
+  // console.log(cartLocal[0].id);
+  // console.log(cartLocal.length);
+
+  for(let i=0;i<cartLocal.length;i++){
+    if(value_id == cartLocal[i].id){
+      cartLocal[i].count ++;
       pass = false;
     }
   }
- 
+
   if(pass){
-    var obj = {
-      id: value_id,
-      count: 1,
-    };
-    cart.push(obj);
-  }
-  // console.log(obj);
-  console.log(cart);
-  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || []; // อ่านตะกร้าจาก localStorage หรือเป็น array ว่าง
-  cartLocal.push(cart);
+  var obj = {
+        id: value_id,
+        count: 1,
+      };
+      cartLocal.push(obj);
+    }
+
+  $('#count').html(cartLocal.length);
   localStorage.setItem('cartLocal', JSON.stringify(cartLocal)); // เก็บตะกร้ากลับลง localStorage
 }
+
+//----------------------// // 
+//var cart=[];
+//funtion()
+// var pass =true;
+  // for(let i=0;i<cart.length;i++){
+  //   if(value_id == cart[i].id){
+  //     cart[i].count ++;
+  //     pass = false;
+  //   }
+  // }
+ 
+  // if(pass){
+  //   var obj = {
+  //     id: value_id,
+  //     count: 1,
+  //   };
+  //   cart.push(obj);
+  // }
+  // // console.log(obj);
+  // console.log(cart);
