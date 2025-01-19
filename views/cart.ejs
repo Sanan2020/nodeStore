@@ -147,11 +147,47 @@
 
 <body>
     <script src="/cart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script>
-        // localStorage.clear();
-        // อ่านข้อมูลจาก localStorage
-        let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
-        console.log(cartLocal); // ดูข้อมูลในตะกร้า
+            $(document).ready(function() {
+            // ดึงข้อมูลจาก localStorage
+            let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+            // ถ้า cartLocal มีข้อมูลสินค้า
+            if (cartLocal.length > 0) {
+                // สร้าง HTML ที่จะใช้แสดงสินค้าทั้งหมด
+                let cartHTML = '';
+                cartLocal.forEach(function(item) {
+                    cartHTML += `
+   
+                        <tr>
+                        <td class="tdimg"><img src="/image/ney.jpg" class="c-img"></td>
+
+                        <td class="tdname">
+                            <div>แป้งครอฟเฟิลสำเร็จรูป (แช่แข็ง) SYNOVA : แป้งครอฟเฟิลทรงขาตรงสำเร็จรูป
+                                (ขนาดเล็ก) (ยกกล่อง)</div>
+                        </td>
+                        <td id="price1" class="hide">฿${item.price}</td>
+
+                        <td>
+                            <div class="td-qt"><input type="number" id="quantity-1" class="form-control qt" value="${item.count}" min="1" max="10" onclick="count();"></div>
+                        </td>
+
+                        <td class="tdtotal" id="total-price1">฿${item.price * item.count}</td>
+
+                        <td class="tdrm"><a class="btn btn-danger btn-rm" onclick="alert('dd');">X</a></td>
+                    </tr>
+                    `;
+                });
+
+                // ใช้ .html() เพื่อแสดงผลทั้งหมดใน container
+                $('#cartItems').html(cartHTML);
+            } else {
+                // ถ้าไม่มีสินค้าในตะกร้า
+                $('#cartItems').html("Your cart is empty.");
+            }
+        });
+                     
     </script>
 
     <!-- Shopping Cart Section -->
@@ -171,6 +207,11 @@
                     </tr>
 
                     <!-- -ตัวอย่างข้อมูล -->
+                    
+                    <tr>
+                        <div id="cartItems"></div>
+                    </tr>
+                  
                     <tr>
                         <td class="tdimg"><img src="/image/ney.jpg" class="c-img"></td>
 
