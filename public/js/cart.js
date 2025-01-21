@@ -1,18 +1,7 @@
-function addTest(obj){
-  console.log(obj);
-  console.log(obj.name);
-  console.log(obj[0]);
-  console.log(obj['name']);
-
-  aa = JSON.parse(obj);
-  console.log(typeof(aa));
-
-  console.log(aa);
-  console.log(aa.name);
-  // console.log(aa[0].name);
-  // console.log(aa[0]);
-  console.log(aa['name']);
-}
+$(document).ready(function() {
+  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+  $('#count').html(cartLocal.length);
+});
 
 
 function processSwal(label){
@@ -40,7 +29,6 @@ Swal.fire({
     $('#count').html(label);
   }
 });
-
 }
 
 
@@ -71,4 +59,20 @@ function addtocart(item){
   localStorage.setItem('cartLocal', JSON.stringify(cartLocal)); // เก็บตะกร้ากลับลง localStorage
   // $('#count').html(cartLocal.length);
   processSwal(cartLocal.length);
+}
+
+//filter
+// function filterSelection(){}
+
+//cart remove item
+function cartRemoveitem(removeId){
+  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+  cartLocal = cartLocal.filter(function(item) {
+    return item.id !== removeId;
+  });
+  localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
+}
+
+function cartUpdateitem(){
+  
 }
