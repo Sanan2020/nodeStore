@@ -1,29 +1,18 @@
 $(document).ready(function() {
-  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
-  $('#count').html(cartLocal.length);
+  cartUpdateitem();
 });
 
 
 function processSwal(label){
   let timerInterval;
 Swal.fire({
-  // icon:'success',
-  // title: "Auto close alert!",
-  // html: "I will close in <b></b> milliseconds.",
+  icon:'success',
   timer: 1000,
-  // timerProgressBar: true,
-  didOpen: () => {
-    Swal.showLoading();
-    // const timer = Swal.getPopup().querySelector("b");
-    // timerInterval = setInterval(() => {
-    //   timer.textContent = `${Swal.getTimerLeft()}`;
-    // }, 100);
-  },
+  showConfirmButton: false,
   willClose: () => {
     clearInterval(timerInterval);
   }
 }).then((result) => {
-  /* Read more about handling dismissals below */
   if (result.dismiss === Swal.DismissReason.timer) {
     console.log("I was closed by the timer");
     $('#count').html(label);
@@ -34,7 +23,7 @@ Swal.fire({
 
 function addtocart(item){
   itemToOBJ = JSON.parse(item);
-  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || []; // อ่านตะกร้าจาก localStorage หรือเป็น array ว่าง
+  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
   var pass =true;
 
   for(let i=0;i<cartLocal.length;i++){
@@ -56,8 +45,7 @@ function addtocart(item){
       cartLocal.push(obj);
     }
   
-  localStorage.setItem('cartLocal', JSON.stringify(cartLocal)); // เก็บตะกร้ากลับลง localStorage
-  // $('#count').html(cartLocal.length);
+  localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
   processSwal(cartLocal.length);
 }
 
@@ -71,8 +59,68 @@ function cartRemoveitem(removeId){
     return item.id !== removeId;
   });
   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
+  cartUpdateitem();
 }
 
 function cartUpdateitem(){
-  
+  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+  if (cartLocal.length > 0) {
+    let cartHTML = '';
+    let sumTotal =0;
+    cartLocal.forEach(function(item) {
+      cartHTML += `
+                   <tr>
+                      <td class="tdimg"><img src="/image/ney.jpg" class="c-img"></td>
+                      <td class="tdname"><div>${item.name}</div></td>
+                      <td id="price1" class="hide">฿${item.price}</td>
+                      <td>
+                        <div class="td-qt"><input type="number" id="${item.id}" class="form-control qt" value="${item.count}" min="1" max="10" onclick="quantityCount('${item.id}','${item.price}');"></div>
+                      </td>
+                      <td class="tdtotal" id="total${item.id}">฿${item.price * item.count}</td>
+                      <td class="tdrm"><a class="btn btn-danger btn-rm" onclick="cartRemoveitem('${item.id}');">X</a></td>
+                    </tr>
+                    `;
+        sumTotal += (item.price * item.count);
+    });
+    $("#NotcartItems").css('display','none');
+    $("#cartItems").html(cartHTML);
+    $('#count').html(cartLocal.length);
+    //sumTotal
+    $('#sumTotal').html('฿'+sumTotal);
+    $('#btnSumTotal').html('฿'+sumTotal);
+    } else {
+      $("#tbn").css('display','none');
+      $("#NotcartItems").css('display','flex');
+      $('#count').html('0');
+    }
+}
+
+//quantitycount
+function quantityCount(countId, price){
+  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+
+  //+ -
+  let quantity = $('#'+countId).val();
+  //update cartLocal.count
+  for(let i=0;i<cartLocal.length;i++){
+    if(countId == cartLocal[i].id){
+      cartLocal[i].count = quantity;
+    }
+  }
+  localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
+  //update total-price
+  $('#total'+countId).html('฿'+  price*quantity);
+
+  //sumTotal
+  let sumTotal =0;
+  var text = $('.tdtotal').text();
+  $('.tdtotal').each(function() {
+    var text = $(this).text().replace('฿', '').trim();
+    var integer = parseInt(text, 10);
+    // alert(integer);
+    sumTotal += integer;
+ });
+ 
+  $('#sumTotal').html('฿'+sumTotal);
+  $('#btnSumTotal').html('฿'+sumTotal);
 }

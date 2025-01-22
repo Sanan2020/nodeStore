@@ -17,35 +17,7 @@
             
         </div>
     </div>
-    
-    <script>
-            $(document).ready(function() {
-            let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
-            if (cartLocal.length > 0) {
-                let cartHTML = '';
-                cartLocal.forEach(function(item) {
-                    cartHTML += `
-                        <tr>
-                        <td class="tdimg"><img src="/image/ney.jpg" class="c-img"></td>
-                        <td class="tdname"><div>${item.name}</div></td>
-                        <td id="price1" class="hide">฿${item.price}</td>
-                        <td>
-                            <div class="td-qt"><input type="number" id="quantity-1" class="form-control qt" value="${item.count}" min="1" max="10" onclick="count();"></div>
-                        </td>
-                        <td class="tdtotal" id="total-price1">฿${item.price * item.count}</td>
-                        <td class="tdrm"><a class="btn btn-danger btn-rm" onclick="cartRemoveitem('${item.id}');">X</a></td>
-                    </tr>
-                    `;
-                });
-                $("#NotcartItems").css('display','none');
-                $("#cartItems").html(cartHTML);
-            } else {
-                $("#tbn").css('display','none');
-                // $('#NotcartItems').html("Your cart is empty.");
-            }
-        });
-    </script>
-
+   
     <!-- Shopping Cart Section -->
     <div id="tbn" class="container" >
         <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2">
@@ -65,7 +37,7 @@
                     <tbody id="cartItems">
                     </tbody>
                 </table><br><br>
-
+                
                 <script>
                     function count() {
                         var productPrice1 = document.getElementById("price1").textContent;
@@ -93,7 +65,7 @@
                             <p>ยอดรวม</p>
                         </div>
                         <div>
-                            <p>฿487.00</p>
+                            <p id="sumTotal">฿487.00</p>
                         </div>
                     </div>
                     <hr>
@@ -101,7 +73,7 @@
                     <div style="display: flex; justify-content: center;">
                         <a class="btn-command" style="text-decoration: none; cursor: pointer;">
                             <div class="des">ชำระเงิน</div>
-                            <div class="des">฿487.00</div>
+                            <div id="btnSumTotal" class="des">฿487.00</div>
                         </a>
                     </div>
                     <p></p>
@@ -124,7 +96,6 @@
             item.remove();
             updateTotal();
         }
-
         // Update item quantity and recalculate total price
         function updateQuantity(itemId) {
             var quantity = document.getElementById("quantity-" + itemId.split('-')[2]).value;
@@ -165,6 +136,6 @@
         }
     </script>
     <!------------------------------------------------------------ รอแก้ไข -------------------------------------------------------------->
-
+    
 </body>
 </html>
