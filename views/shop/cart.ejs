@@ -1,4 +1,4 @@
-<%- include('navbar') %>
+<%- include('../includes/navbar') %>
 <link rel="stylesheet" href="/css/cart.css">
 </head>
 
@@ -38,6 +38,26 @@
                     </tbody>
                 </table><br><br>
                 
+                <style>
+                    /* .content{
+                        min-height: 50vh;
+                    } */
+                    /* body {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        } */
+                </style>
+                 <!-- <div class="content">
+                    <h1>เนื้อหาของเว็บไซต์</h1>
+                    <p>บางข้อความหรือเนื้อหา...</p>
+                </div> -->
+
                 <script>
                     function count() {
                         var productPrice1 = document.getElementById("price1").textContent;
@@ -71,7 +91,7 @@
                     <hr>
                     <p>ยอดรวมทั้งหมด</p>
                     <div style="display: flex; justify-content: center;">
-                        <a class="btn-command" style="text-decoration: none; cursor: pointer;">
+                        <a  href="/checkout" class="btn-command" style="text-decoration: none; cursor: pointer;">
                             <div class="des">ชำระเงิน</div>
                             <div id="btnSumTotal" class="des">฿487.00</div>
                         </a>
@@ -83,7 +103,17 @@
         </div>
     </div>
     
-        
+    <!-- <style>
+        .content {
+        min-height: 90vh;  
+        padding: 20px;
+    }
+    </style>
+    <div class="content">
+        <h1>เนื้อหาของเว็บไซต์</h1>
+        <p>บางข้อความหรือเนื้อหา...</p>
+    </div> -->
+
     <!------------------------------------------------------------ รอแก้ไข -------------------------------------------------------------->
 
     <script>

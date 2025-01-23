@@ -1,5 +1,6 @@
 const express = require('express')
 const Product = require('../models/products')
+const Customer = require('../models/customers')
 const router = express.Router()
 
 const multer = require('multer')
@@ -16,26 +17,43 @@ const upload = multer({
 })
 
 //-----------user------------// home = product + cart + checkout + payment
-router.get('/cart',(req,res)=>{
-    // const items_id = req.params._id
-    // console.log(items_id);
- 
-        res.render('cart')
-})
-
 router.get('/',(req,res)=>{
     Product.find({}).exec().then(doc => {
-        res.render('index',{products:doc})
+        res.render('shop/index',{products:doc})
     }).catch(err => {console.error('Error:', err);});
 })
 
 router.get('/detail/:id',(req,res)=>{
     const product_id = req.params.id
     Product.findOne({_id:product_id}).exec().then(doc => {
-        res.render('product',{product:doc})
+        res.render('shop/product',{product:doc})
     }).catch(err => {console.error('Error:', err);});
     
-})
+});
+
+router.get('/cart',(req,res)=>{ 
+    res.render('shop/cart')
+});
+
+router.get('/checkout',(req,res)=>{ 
+    res.render('shop/checkout')
+});
+
+router.post('/payment',(req,res)=>{ 
+    //save
+    let data = new Customer({
+        firstName:req.body.name,
+        lastName:req.body.last,
+        address:req.body.address,
+        email:req.body.email,
+        phone:req.body.phone
+    })
+    
+    //scan promptpay
+    if(req.body.promptpay == "promptpay"){
+        res.send(data +req.body.promptpay);
+    }
+});
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
 router.get('/login',(req,res)=>{
