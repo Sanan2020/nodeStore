@@ -1,3 +1,7 @@
+#navbarNav {
+    justify-content: end;
+}
+
 .navbar-toggler-icon {
     background-color: rgb(49, 41, 41);
 }

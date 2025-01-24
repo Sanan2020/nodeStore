@@ -3,9 +3,24 @@
 </head>
 
 <body>
-    <div style="margin-top: 105px;"></div>
-    <div id="NotcartItems" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-        <div style="width: 100%; height: 20%;">
+    <!-- <div style="margin-top: 105px; background: #000;"></div> -->
+    <!-- <div style="margin-top: 5%;"></div> -->
+    <!-- <div id="NotcartItems" style="margin-top: auto; display: flex; justify-content: center; align-items: center; height: 100%; background: #000;" >
+        <div style="width: 100%; height: 20%; background: #d4c0c0;">
+            
+            <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                <h3>Cart is&nbsp;</h3><h3 style="color: orangered;">Enpty!</h3>
+            </div>
+            
+            <div style="display: flex; justify-content: center;">
+                <a href="/" style="background: #ff4500; color: #f3f2f2;" class="btn">Go home</a>
+            </div>
+            
+        </div>
+    </div> -->
+
+    <div id="NotcartItems" style="margin-top: auto; justify-content: center;">
+        <div>
             
             <div style="display: flex; justify-content: center; margin-bottom: 10px;">
                 <h3>Cart is&nbsp;</h3><h3 style="color: orangered;">Enpty!</h3>
@@ -17,9 +32,9 @@
             
         </div>
     </div>
-   
+
     <!-- Shopping Cart Section -->
-    <div id="tbn" class="container" >
+    <div id="tbn" class="container" style="margin-top: 10vh;">
         <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-2">
 
             <div class="col-xl-8 mt-5">
@@ -37,26 +52,6 @@
                     <tbody id="cartItems">
                     </tbody>
                 </table><br><br>
-                
-                <style>
-                    /* .content{
-                        min-height: 50vh;
-                    } */
-                    /* body {
-            min-height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content {
-            flex: 1;
-            padding: 20px;
-        } */
-                </style>
-                 <!-- <div class="content">
-                    <h1>เนื้อหาของเว็บไซต์</h1>
-                    <p>บางข้อความหรือเนื้อหา...</p>
-                </div> -->
 
                 <script>
                     function count() {
@@ -102,17 +97,6 @@
 
         </div>
     </div>
-    
-    <!-- <style>
-        .content {
-        min-height: 90vh;  
-        padding: 20px;
-    }
-    </style>
-    <div class="content">
-        <h1>เนื้อหาของเว็บไซต์</h1>
-        <p>บางข้อความหรือเนื้อหา...</p>
-    </div> -->
 
     <!------------------------------------------------------------ รอแก้ไข -------------------------------------------------------------->
 
@@ -166,6 +150,6 @@
         }
     </script>
     <!------------------------------------------------------------ รอแก้ไข -------------------------------------------------------------->
-    
+    <%- include('../includes/footer') %>
 </body>
 </html>

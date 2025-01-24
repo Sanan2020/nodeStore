@@ -16,6 +16,15 @@ const upload = multer({
     storage:storage
 })
 
+//test API
+router.get('/testAPI', (req, res) => {
+    Product.find({}).exec().then(doc => {
+        res.json(doc); // ส่งข้อมูลในรูปแบบ JSON
+    }).catch(err => {
+        console.error('Error:', err);
+        res.status(500).send('Internal Server Error');
+    });
+});
 //-----------user------------// home = product + cart + checkout + payment
 router.get('/',(req,res)=>{
     Product.find({}).exec().then(doc => {
@@ -40,19 +49,21 @@ router.get('/checkout',(req,res)=>{
 });
 
 router.post('/payment',(req,res)=>{ 
-    //save
+    //save customer
     let data = new Customer({
         firstName:req.body.name,
         lastName:req.body.last,
         address:req.body.address,
         email:req.body.email,
-        phone:req.body.phone
+        phone:req.body.phone,
+        orderNumber:"14236589"
     })
-    
-    //scan promptpay
-    if(req.body.promptpay == "promptpay"){
-        res.send(data +req.body.promptpay);
-    }
+    res.send(data);
+
+    //save oder + promptpay
+    // if(req.body.promptpay == "promptpay"){
+    //     res.send(data +req.body.promptpay);
+    // }
 });
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder

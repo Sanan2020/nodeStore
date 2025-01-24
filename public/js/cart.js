@@ -1,5 +1,49 @@
 $(document).ready(function() {
   cartUpdateitem();
+
+  //test API
+  // ใช้ Fetch API เพื่อดึงข้อมูลจาก server
+fetch('/testAPI')
+.then(response => response.json()) // แปลงข้อมูลที่รับมาเป็น JSON
+.then(products => {
+    console.log(products); // แสดงข้อมูลใน console
+
+    // ใช้ข้อมูลที่ได้รับใน JavaScript
+    // products.forEach(product => {
+    //     const productDiv = document.createElement('div');
+    //     productDiv.textContent = `Product: ${product.name}, Price: ${product.price}`;
+    //     document.body.appendChild(productDiv);
+    // });
+
+    //
+    products.forEach(function(item) {
+      cartHTML += `
+                   <div class="col filterDiv pro">
+                   <div class="card product-card">
+
+                    <a href="/detail/<%= item._id %>">
+                        <img src="image/choccolate.jpg" class="product-img card-img-top" alt="Product Image">
+                    </a>
+
+                    <div class="card-body" style="text-align: left;">
+                        <h5 class="card-title"><%= item.name %></h5>
+                        <p class="card-text"><%= item.description %></p>
+                        <p class="card-text text-muted"></p>
+                        <div class="custom-product">
+                            <a onclick="addtocart('<%= JSON.stringify(item) %>');" class="btn btn-outline-dark">Add
+                                tocart!!</a>
+                            <span class="card-text text-muted">฿<%= item.price %></span></div>
+                    </div>
+                </div>
+            </div>
+                    `;
+    });
+    $("#testItem").html(cartHTML);
+})
+.catch(error => {
+    console.error('Error:', error);
+});
+
 });
 
 

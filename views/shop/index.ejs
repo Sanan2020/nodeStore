@@ -16,36 +16,36 @@
         <img src="/image/promate.jpg" alt="Trulli" width="" height="" class="content0-img">
     </div>
 
-        <!-- Category Section -->
-        <div class="container" style="margin-top: 30px;">
-            <h2 class="categories-title">สินค้าขายดี</h2>
-            <hr style="border: 1px solid #141414;">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-2">
-                <% Object.values(products).forEach(function(item){ %>
-                <div class="col">
-                    <div class="card category-card">
+    <!-- Category Section -->
+    <div class="container" style="margin-top: 30px;">
+        <h2 class="categories-title">สินค้าขายดี</h2>
+        <hr style="border: 1px solid #141414;">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-2">
+            <% Object.values(products).forEach(function(item){ %>
+            <div class="col">
+                <div class="card category-card">
 
-                        <a href="/detail/<%= item._id %>">
+                    <a href="/detail/<%= item._id %>">
                         <img src="image/numsod.jpg" class="card-img-top" alt="Category Image" width="" height="">
                     </a>
 
-                        <div class="card-body">
-                            <h5 class="card-title"><%= item.name %></h5>
-                            <div class="custom-category">
-                                <button onclick="addtocart('<%= item._id %>');">Add to Cart</button>
-                                <span class="card-text text-muted">฿<%= item.price %></span>
-                            </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= item.name %></h5>
+                        <div class="custom-category">
+                            <button onclick="addtocart('<%= item._id %>');">Add to Cart</button>
+                            <span class="card-text text-muted">฿<%= item.price %></span>
                         </div>
                     </div>
                 </div>
-                <% }) %>
             </div>
+            <% }) %>
         </div>
+    </div>
 
-<script>
-    
-</script>
-            <!-- Product Listing -->
+    <script>
+
+    </script>
+    <!-- Product Listing -->
     <div class="container mt-5">
         <div>
             <h2 class="product-title">สินค้าทั้งหมด</h2>
@@ -66,15 +66,16 @@
                 <div class="card product-card">
 
                     <a href="/detail/<%= item._id %>">
-                    <img src="image/choccolate.jpg" class="product-img card-img-top" alt="Product Image">
-                </a>
-                    
+                        <img src="image/choccolate.jpg" class="product-img card-img-top" alt="Product Image">
+                    </a>
+
                     <div class="card-body" style="text-align: left;">
                         <h5 class="card-title"><%= item.name %></h5>
                         <p class="card-text"><%= item.description %></p>
                         <p class="card-text text-muted"></p>
                         <div class="custom-product">
-                            <a onclick="addtocart('<%= JSON.stringify(item) %>');" class="btn btn-outline-dark">Add tocart!!</a>
+                            <a onclick="addtocart('<%= JSON.stringify(item) %>');" class="btn btn-outline-dark">Add
+                                tocart!!</a>
                             <span class="card-text text-muted">฿<%= item.price %></span></div>
                     </div>
                 </div>
@@ -83,6 +84,17 @@
 
         </div>
     </div>
+
+    <!-- test -->
+    <div id="testItem">
+        dd
+    </div>
+
+    <script>
+        // $(document).ready(function () {
+        //     $("#testItem").html('html test');
+        // });
+    </script>
 
     <script>
         filterSelection("all")
@@ -200,4 +212,5 @@
 
     <%- include('../includes/footer') %>
 </body>
+
 </html>

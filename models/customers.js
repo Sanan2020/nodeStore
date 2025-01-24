@@ -15,7 +15,8 @@ let customerSchema = mongoose.Schema({
     lastName:String,
     address:String,
     email:String,
-    phone:Number
+    phone:Number,
+    orderNumber:Number,
 })
 // สร้าง Model
 let Customer = mongoose.model("customers",customerSchema)
