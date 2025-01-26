@@ -89,12 +89,12 @@ router.post('/login',(req,res)=>{
 
 router.get('/manage',(req,res)=>{
     Product.find({}).exec().then(doc => {
-        res.render('manage',{products:doc})
+        res.render('admin/manage',{products:doc})
     }).catch(err => {console.error('Error:', err);});
 })
 
 router.get('/frminsert',(req,res)=>{
-    res.render('frminsert')
+    res.render('admin/frminsert')
 })
 
 router.post('/insert',upload.single("image"),(req,res)=>{
@@ -113,7 +113,7 @@ router.post('/insert',upload.single("image"),(req,res)=>{
 router.post('/frmedit',(req,res)=>{
     const edit_id = req.body.edit_id
     Product.findOne({_id:edit_id}).exec().then(doc => {
-        res.render('frmedit',{product:doc})
+        res.render('admin/frmedit',{product:doc})
     }).catch(err => {console.error('Error:', err);});
 })
 
@@ -127,7 +127,7 @@ router.post('/update',(req,res)=>{
     }
     console.log(data)
     Product.findByIdAndUpdate(update_id,data,{useeFindAndModify:false}).exec().then(doc => {
-        res.redirect('/manage')
+        res.redirect('/manage');
     }).catch(err => {console.error('Error:', err);});
 })
 

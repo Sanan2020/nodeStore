@@ -1,14 +1,12 @@
-var aa;
+var data;
 $(document).ready(function() {
   cartUpdateitem();
 
-  //test API
-  // ใช้ Fetch API เพื่อดึงข้อมูลจาก server
 fetch('/testAPI')
 .then(response => response.json()) // แปลงข้อมูลที่รับมาเป็น JSON
 .then(products => {
    // console.log(products); // แสดงข้อมูลใน console
-  aa = products;
+  data = products;
     // ใช้ข้อมูลที่ได้รับใน JavaScript
     // products.forEach(product => {
     //     const productDiv = document.createElement('div');
@@ -24,16 +22,16 @@ fetch('/testAPI')
                    <div class="card product-card">
 
                     <a href="/detail/${item._id}">
-                        <img src="image/choccolate.jpg" class="product-img card-img-top" alt="Product Image">
+                        <img src="image/${item.image}" class="product-img card-img-top" alt="Product Image">
                     </a>
 
                     <div class="card-body" style="text-align: left;">
-                        <h5 class="card-title">${item.name}</h5>
-                        <p class="card-text">${item.description}</p>
+                        <h5 style="border: 1px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; " class="card-title">${item.name}</h5>
+                        <p style="border: 1px solid black; max-height:50px; overflow: hidden;" class="card-text">${item.description}</p>
                         <p class="card-text text-muted"></p>
                         <div class="custom-product">
-                            <a onclick="addtocart2(${JSON.stringify(item)});" class="btn btn-outline-dark">Add
-                                tocart!!</a>
+                            <a onclick="addtocart2('${item._id}');" class="btn btn-outline-dark">Add
+                                tocart</a>
                             <span class="card-text text-muted">฿${item.price}</span></div>
                     </div>
                 </div>
@@ -62,7 +60,6 @@ Swal.fire({
   }
 });
 }
-
 
 function addtocart(item){
   itemToOBJ = JSON.parse(item);
@@ -113,7 +110,7 @@ function cartUpdateitem(){
     cartLocal.forEach(function(item) {
       cartHTML += `
                    <tr>
-                      <td class="tdimg"><img src="/image/ney.jpg" class="c-img"></td>
+                      <td class="tdimg"><img src="/image/${item.image}" class="c-img"></td>
                       <td class="tdname"><div>${item.name}</div></td>
                       <td id="price1" class="hide">฿${item.price}</td>
                       <td>
@@ -170,44 +167,36 @@ function quantityCount(countId, price){
 
 ////////////////////////////////test
 function addtocart2(item2){
-  console.log(item2);
+  data2 = data.filter(function(item) {
+    return item._id == item2;
+  });
+  console.log(data2);
+  console.log(data2[0]._id);
   console.log('-----');
 
-  fetch('/testAPI')
-.then(response => response.json()) // แปลงข้อมูลที่รับมาเป็น JSON
-.then(products => {
-  console.log(products); // แสดงข้อมูลใน console
+  // itemToOBJ = JSON.parse(item);
+  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+  var pass =true;
 
-   // itemToOBJ = JSON.parse(item);
-   let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
-   var pass =true;
- 
-   console.log(cartLocal);
-   console.log(item2);
-   for(let i=0;i<cartLocal.length;i++){
-     if(item2 == cartLocal[i].id){
-       cartLocal[i].count ++;
-       pass = false;
-     }
-   }
-   const result = Object.assign({}, products);
-   console.log(JSON.stringify(result));
-  //  itemToOBJ = JSON.parse(products);
-   if(pass){
-   var obj = {
-         id: products[0]._id,
-         name:products[0].name,
-         description:products[0].description,
-         price:products[0].price,
-         image:products[0].image,
-         count: 1,
-       };
-       cartLocal.push(obj);
-     }
-   
-   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
-   processSwal(cartLocal.length);
-})
-.catch(error => {console.error('Error:', error);});
- 
+  for(let i=0;i<cartLocal.length;i++){
+    if(item2 == cartLocal[i].id){
+      cartLocal[i].count ++;
+      pass = false;
+    }
+  }
+
+ //  itemToOBJ = JSON.parse(products);
+  if(pass){
+  var obj = {
+        id: data2[0]._id,
+        name:data2[0].name,
+        description:data2[0].description,
+        price:data2[0].price,
+        image:data2[0].image,
+        count: 1,
+      };
+      cartLocal.push(obj);
+    }
+  localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
+  processSwal(cartLocal.length);
 }

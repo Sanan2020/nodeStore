@@ -18,14 +18,14 @@
     <div class="container ">
     <form action="/update" method="post">
         <input type="hidden" value="<%= product._id %>" name="update_id">
+        <label>Image:</label><br>
+        <!-- <input type="file" name="image" ><br> -->
         <label>Name:</label>
         <input type="text" name="name" value="<%= product.name %>"><br>
-        <label>Price:</label>
-        <input type="text" name="price" value="<%= product.price %>"><br>
-        <label>Image:</label>
-        <!-- <input type="file" name="image" ><br> -->
         <label>Description:</label>
-        <input type="text" name="description" value="<%= product.description %>"><br><br>
+        <input type="text" name="description" value="<%= product.description %>"><br>
+        <label>Price:</label>
+        <input type="text" name="price" value="<%= product.price %>"><br><br>
         <div class="form-group">
         <button type="submit" class="btn btn-primary">อัพเดท</button>
         <a class="btn btn-info" href="/manage">ยกเลิก</a>
