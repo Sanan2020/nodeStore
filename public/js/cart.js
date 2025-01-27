@@ -26,8 +26,8 @@ fetch('/testAPI')
                     </a>
 
                     <div class="card-body" style="text-align: left;">
-                        <h5 style="border: 1px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; " class="card-title">${item.name}</h5>
-                        <p style="border: 1px solid black; max-height:50px; overflow: hidden;" class="card-text">${item.description}</p>
+                        <h5 style="border: 0px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; " class="card-title">${item.name}</h5>
+                        <p style="border: 0px solid black; max-height:50px; overflow: hidden;" class="card-text">${item.description}</p>
                         <p class="card-text text-muted"></p>
                         <div class="custom-product">
                             <a onclick="addtocart2('${item._id}');" class="btn btn-outline-dark">Add
@@ -112,9 +112,9 @@ function cartUpdateitem(){
                    <tr>
                       <td class="tdimg"><img src="/image/${item.image}" class="c-img"></td>
                       <td class="tdname"><div>${item.name}</div></td>
-                      <td id="price1" class="hide">฿${item.price}</td>
-                      <td>
-                        <div class="td-qt"><input type="number" id="${item.id}" class="form-control qt" value="${item.count}" min="1" max="10" onclick="quantityCount('${item.id}','${item.price}');"></div>
+                      <td style="text-align: center;" id="price1" class="hide">฿${item.price}</td>
+                      <td class="td-qt">
+                        <input type="number" id="${item.id}" class="form-control qt" value="${item.count}" min="1" max="10" onclick="quantityCount('${item.id}','${item.price}');">
                       </td>
                       <td class="tdtotal" id="total${item.id}">฿${item.price * item.count}</td>
                       <td class="tdrm"><a class="btn btn-danger btn-rm" onclick="cartRemoveitem('${item.id}');">X</a></td>
