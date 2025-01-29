@@ -21,8 +21,9 @@
 
             /* display: flex; */
             /* flex-direction: row; */
-            /* margin: 0;
-            padding: 0; */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         .price {
@@ -46,18 +47,26 @@
             opacity: 0.7;
         }
 
-        @media screen and (max-width: 767px) {
-            .wid {
-                /* max-width: 325px; */
-            }
-        }
+       
 
         /* 1199 - 768 */
-        /* @media (max-width: 1399px) and (min-width: 768px) {
-            .im {
-               width: 300px;
+        @media (max-width: 1399px) and (min-width: 768px) {
+            .mo-img {
+                
+               width: 257px;
+               /* height: 270px; */
             }
-        } */
+            
+        }
+
+        @media screen and (max-width: 767px) {
+            .mo-bo{
+                max-width: 325px;
+            }
+            .mo-img{
+                max-width: 325px;
+            }
+        }
     </style>
 
 </head>
@@ -68,13 +77,13 @@
         <div class="card mt-4" style="background: 0;">
             <div class="row row-cols-1 row-cols-md-2">
 
-                <div class="col-xl-4" style="background:#a7f398; display: flex; justify-content: center;">
-                    <img class="wid im" src="/image/<%= product.image %>" alt="">
+                <div class="col-xl-4" style="background: #f17474; display: flex; justify-content: center;">
+                    <img class="mo-img" src="/image/<%= product.image %>" alt="">
                 </div>
 
 
-                <div class="col-xl-8" style="background:#f0a8a8; display: flex; justify-content: center;">
-                    <div class="card-body wid" style="background: 0; ">
+                <div class="col-xl-8" style="background:#7ef174; display: flex; justify-content: center;">
+                    <div class="card-body mo-bo" style="background: 0; ">
                         <h2 style="background: 0;"><%= product.name %></h2>
                         <p><%= product.description %></p>
                         <p class="price">฿<%= product.price %></p>
