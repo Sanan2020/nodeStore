@@ -1,46 +1,6 @@
 var data;
 $(document).ready(function() {
   cartUpdateitem();
-
-fetch('/testAPI')
-.then(response => response.json()) // แปลงข้อมูลที่รับมาเป็น JSON
-.then(products => {
-   // console.log(products); // แสดงข้อมูลใน console
-  data = products;
-    // ใช้ข้อมูลที่ได้รับใน JavaScript
-    // products.forEach(product => {
-    //     const productDiv = document.createElement('div');
-    //     productDiv.textContent = `Product: ${product.name}, Price: ${product.price}`;
-    //     document.body.appendChild(productDiv);
-    // });
-
-    //
-    let cartHT = '';
-    products.forEach(function(item) {
-      cartHT += `
-                   <div class="col">
-                   <div class="card product-card">
-
-                    <a href="/detail/${item._id}">
-                        <img src="image/${item.image}" class="product-img card-img-top" alt="Product Image">
-                    </a>
-
-                    <div class="card-body" style="text-align: left;">
-                        <h5 style="border: 0px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; " class="card-title">${item.name}</h5>
-                        <p style="border: 0px solid black; max-height:50px; overflow: hidden;" class="card-text">${item.description}</p>
-                        <p class="card-text text-muted"></p>
-                        <div class="custom-product">
-                            <a onclick="addtocart2('${item._id}');" class="btn btn-outline-dark">Add
-                                tocart</a>
-                            <span class="card-text text-muted">฿${item.price}</span></div>
-                    </div>
-                </div>
-            </div>
-                    `;
-    });
-    $("#testItem").html(cartHT);
-})
-.catch(error => {console.error('Error:', error);});
 });
 
 
@@ -88,9 +48,6 @@ console.log(itemToOBJ);
   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
   processSwal(cartLocal.length);
 }
-
-//filter
-// function filterSelection(){}
 
 //cart remove item
 function cartRemoveitem(removeId){
@@ -166,37 +123,37 @@ function quantityCount(countId, price){
 }
 
 ////////////////////////////////test
-function addtocart2(item2){
-  data2 = data.filter(function(item) {
-    return item._id == item2;
-  });
-  console.log(data2);
-  console.log(data2[0]._id);
-  console.log('-----');
+// function addtocart2(item2){
+//   data2 = data.filter(function(item) {
+//     return item._id == item2;
+//   });
+//   console.log(data2);
+//   console.log(data2[0]._id);
+//   console.log('-----');
 
-  // itemToOBJ = JSON.parse(item);
-  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
-  var pass =true;
 
-  for(let i=0;i<cartLocal.length;i++){
-    if(item2 == cartLocal[i].id){
-      cartLocal[i].count ++;
-      pass = false;
-    }
-  }
+//   let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+//   var pass =true;
 
- //  itemToOBJ = JSON.parse(products);
-  if(pass){
-  var obj = {
-        id: data2[0]._id,
-        name:data2[0].name,
-        description:data2[0].description,
-        price:data2[0].price,
-        image:data2[0].image,
-        count: 1,
-      };
-      cartLocal.push(obj);
-    }
-  localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
-  processSwal(cartLocal.length);
-}
+//   for(let i=0;i<cartLocal.length;i++){
+//     if(item2 == cartLocal[i].id){
+//       cartLocal[i].count ++;
+//       pass = false;
+//     }
+//   }
+
+ 
+//   if(pass){
+//   var obj = {
+//         id: data2[0]._id,
+//         name:data2[0].name,
+//         description:data2[0].description,
+//         price:data2[0].price,
+//         image:data2[0].image,
+//         count: 1,
+//       };
+//       cartLocal.push(obj);
+//     }
+//   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
+//   processSwal(cartLocal.length);
+// }

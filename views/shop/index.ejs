@@ -3,7 +3,6 @@
 </head>
 
 <body>
-    <!-- <div class="content0-con" style="margin-top: 136px;"> -->
     <div class="container" style="margin-top: 136px;">
         <article class="content0-content">
             <h1 style="text-align: center;">Mamon Cake</h1>
@@ -13,7 +12,6 @@
                 มาม่อนเค้กเนื้อกล้วย และมาม่อนเค้กสูตรชูการ์ฟรี มาม่อนเค้กทุกชิ้นของเราบรรจุกล่องสวยงาม สะอาด
                 พร้อมรับประทาน พกไปทานได้ทุกที่ ทุกเวลา ที่สำคัญไม่ใส่สารกันเสีย</p>
         </article>
-        <!-- <img src="/image/promate.jpg" alt="Trulli" width="" height="" class="content0-img"> -->
     </div>
 
     <!-- Category Section -->
@@ -31,7 +29,7 @@
                     </a>
 
                     <div class="card-body">
-                        <h5 class="card-title"><%= item.name %></h5>
+                        <h5 class="card-title" style="border: 0px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= item.name %></h5>
                         <div class="custom-category">
                             <button onclick="addtocart('<%= JSON.stringify(item) %>');">Add to Cart</button>
                             <span class="card-text text-muted">฿<%= item.price %></span>
@@ -44,36 +42,38 @@
     </div>
 
     <!-- Product Listing -->
-    <!-- <div class="container mt-5">
+    <div class="container mt-5">
         <div>
             <h2 class="product-title">สินค้าทั้งหมด</h2>
             <hr style="border: 1px solid #141414;">
-            <div id="myBtnContainer">
-                <button class="btn-filter active" onclick="filterSelection('all')">ทั้งหมด</button>
-                <button class="btn-filter" onclick="filterSelection('pro')">ช็อคโกแลต</button>
-                <button class="btn-filter" onclick="filterSelection('air')"> เนย</button>
-                <button class="btn-filter" onclick="filterSelection('fruits')">นมสด</button>
-                <button class="btn-filter" onclick="filterSelection('colors')">สตอเบอรี่</button>
-            </div>
 
+            <form action="/" method="get">
+                <label for="option" style="font-size: 18px;"><b>เรียงตาม:</b></label>
+                <select id="option" name="option" onchange="this.form.submit()" style="padding: 5px 16px;">
+                    <option value="ASC" <%= selectedOption === 'ASC' ? 'selected' : '' %>>ราคาต่ำสุด</option>
+                    <option value="DESC" <%= selectedOption === 'DESC' ? 'selected' : '' %>>ราคาสูงสุด</option>
+                </select>
+            </form>
         </div>
+
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mt-4">
 
             <% Object.values(products).forEach(function(item){ %>
-            <div class="col filterDiv pro">
+            <div class="col">
                 <div class="card product-card">
 
                     <a href="/detail/<%= item._id %>">
-                        <img src="image/choccolate.jpg" class="product-img card-img-top" alt="Product Image">
+                        <img src="image/<%= item.image %>" class="product-img card-img-top" alt="Product Image">
                     </a>
 
                     <div class="card-body" style="text-align: left;">
-                        <h5 class="card-title"><%= item.name %></h5>
-                        <p class="card-text"><%= item.description %></p>
+                        <h5 style="border: 0px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; "
+                            class="card-title"><%= item.name %></h5>
+                        <p style="border: 0px solid black; max-height:50px; overflow: hidden;" class="card-text">
+                            <%= item.description %></p>
                         <p class="card-text text-muted"></p>
                         <div class="custom-product">
-                            <a onclick="addtocart('<%= JSON.stringify(item) %>');" class="btn btn-outline-dark">Add
-                                tocart!!</a>
+                            <a onclick="addtocart('<%= JSON.stringify(item) %>');" class="btn btn-outline-dark">Addtocart</a>
                             <span class="card-text text-muted">฿<%= item.price %></span></div>
                     </div>
                 </div>
@@ -81,76 +81,9 @@
             <% }) %>
 
         </div>
-    </div> -->
-
-    <!-- test -->
-    <div class="container mt-5">
-        <div>
-            <h2 class="product-title">สินค้าทั้งหมด</h2>
-            <hr style="border: 1px solid #141414;">
-            <div id="myBtnContainer">
-                <button class="btn-filter active" onclick="filterSelection('all')">ทั้งหมด</button>
-                <button class="btn-filter" onclick="filterSelection('pro')">ช็อคโกแลต</button>
-                <button class="btn-filter" onclick="filterSelection('air')"> เนย</button>
-                <button class="btn-filter" onclick="filterSelection('fruits')">นมสด</button>
-                <button class="btn-filter" onclick="filterSelection('colors')">สตอเบอรี่</button>
-            </div>
-
-        </div>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mt-4" id="testItem">
-            
-        </div>
     </div>
 
-    <script>
-        filterSelection("all")
-
-        function filterSelection(c) {
-            var x, i;
-            x = document.getElementsByClassName("filterDiv");
-            if (c == "all") c = "";
-            for (i = 0; i < x.length; i++) {
-                w3RemoveClass(x[i], "show");
-                if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
-            }
-        }
-
-        function w3AddClass(element, name) {
-            var i, arr1, arr2;
-            arr1 = element.className.split(" ");
-            arr2 = name.split(" ");
-            for (i = 0; i < arr2.length; i++) {
-                if (arr1.indexOf(arr2[i]) == -1) {
-                    element.className += " " + arr2[i];
-                }
-            }
-        }
-
-        function w3RemoveClass(element, name) {
-            var i, arr1, arr2;
-            arr1 = element.className.split(" ");
-            arr2 = name.split(" ");
-            for (i = 0; i < arr2.length; i++) {
-                while (arr1.indexOf(arr2[i]) > -1) {
-                    arr1.splice(arr1.indexOf(arr2[i]), 1);
-                }
-            }
-            element.className = arr1.join(" ");
-        }
-
-        // Add active class to the current button (highlight it)
-        var btnContainer = document.getElementById("myBtnContainer");
-        var btns = btnContainer.getElementsByClassName("btn-filter");
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener("click", function () {
-                var current = document.getElementsByClassName("active");
-                current[0].className = current[0].className.replace(" active", "");
-                this.className += " active";
-            });
-        }
-    </script>
-
-    <div class="container" style="margin-top: 136px; background: #faf9f9; ">
+    <div class="container" style="margin-top: 125px; background: #faf9f9; ">
         <h2>Mamon Cake</h2>
         <p>มาม่อนเค้กสูตรต้นตำรับ เนื้อเนียน นุ่ม เบา หวานน้อย มีให้เลือกหลากหลายเนื้อ และหลากหลายหน้าขนม
             ทั้งมาม่อนเค้กเนื้อวานิลลา, มาม่อนเค้กเนื้อใบเตย, มาม่อนเค้กเนื้อกาแฟ, มาม่อนเค้กเนื้อช็อกโกแลต
@@ -172,4 +105,5 @@
 
     <%- include('../includes/footer') %>
 </body>
+
 </html>

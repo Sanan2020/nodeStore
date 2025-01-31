@@ -27,10 +27,14 @@ router.get('/testAPI', (req, res) => {
 });
 //-----------user------------// home = product + cart + checkout + payment
 router.get('/',(req,res)=>{
-    Product.find({}).exec().then(doc => {
-        res.render('shop/index',{products:doc})
+    const selectedOption = req.query.option ?? 'ASC';
+    const sortOrder = selectedOption === 'ASC' ? 1 : -1;
+
+    console.log(selectedOption);
+    Product.find({}).sort({ price: sortOrder }).exec().then(doc => {
+        res.render('shop/index',{products:doc ,selectedOption: selectedOption})
     }).catch(err => {console.error('Error:', err);});
-})
+});
 
 router.get('/detail/:id',(req,res)=>{
     const product_id = req.params.id
