@@ -60,6 +60,7 @@ function cartRemoveitem(removeId){
 }
 
 function cartUpdateitem(){
+  // console.log('process.....');
   let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
   if (cartLocal.length > 0) {
     let cartHTML = '';

@@ -52,22 +52,42 @@ router.get('/checkout',(req,res)=>{
     res.render('shop/checkout')
 });
 
-router.post('/payment',(req,res)=>{ 
-    //save customer
-    let data = new Customer({
+router.post('/checkout',(req,res)=>{ 
+    //1.save customer
+    let datac = new Customer({
+        cid:"14236589",
         firstName:req.body.name,
         lastName:req.body.last,
         address:req.body.address,
         email:req.body.email,
         phone:req.body.phone,
-        orderNumber:"14236589"
     })
-    res.send(data);
+    try{
+        Customer.seveCustomer(datac)
+        res.send(datac);
+        // res.redirect('/manage')
+    }catch(err){console.error('Error saving user:', err);}
 
-    //save oder + promptpay
-    // if(req.body.promptpay == "promptpay"){
-    //     res.send(data +req.body.promptpay);
-    // }
+    //2.data for oder
+      //ชำระด้วย
+      console.log(req.body.promptpay);
+      //id ,count
+      console.log(req.body.dt);
+      //check id ,count
+
+      //3.oder
+        //create oder
+        //save oder
+
+    // res.render('shop/payment')
+});
+
+router.post('/payment',(req,res)=>{ 
+    //1.show detail oder
+
+    //2.show image qr
+
+    //3.status oder
 });
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
@@ -103,6 +123,7 @@ router.get('/frminsert',(req,res)=>{
 
 router.post('/insert',upload.single("image"),(req,res)=>{
     let data = new Product({
+        pid:'1010',
         name:req.body.name,
         price:req.body.price,
         image:req.file.filename,

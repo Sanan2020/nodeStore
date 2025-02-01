@@ -11,6 +11,7 @@ mongoose.connect(dbUrl)
   });
 // ออกแบบ Schema
 let productSchema = mongoose.Schema({
+    pid:Number,
     name:String,
     price:Number,
     image:String,
