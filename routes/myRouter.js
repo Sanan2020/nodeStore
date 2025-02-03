@@ -1,6 +1,7 @@
 const express = require('express')
 const Product = require('../models/products')
 const Customer = require('../models/customers')
+const Oder = require('../models/oders')
 const router = express.Router()
 
 const multer = require('multer')
@@ -52,10 +53,52 @@ router.get('/checkout',(req,res)=>{
     res.render('shop/checkout')
 });
 
+router.get('/check',(req,res)=>{ 
+//2
+    // console.log('Received data:',req.query);
+    let receivedData = req.query;
+
+    async function getData() {
+        try {
+            const data = await Product.find({}).exec();  // รอผลลัพธ์จากการค้นหา
+           // console.log(data);  // แสดงข้อมูล
+
+           let data2;
+            for (let key in receivedData) {
+                if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
+                // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
+
+                    data2 = data.filter(function(item) {
+                        return item._id == key;
+                    });
+                    console.log(`${data2[0].id} ,${receivedData[key]}`);
+                    //console.log(`${data2[0].id} ,${data2[0].price * receivedData[key]}`);
+
+                    //3
+                    let dataOder = new Oder({
+                        oid:10000,
+                        pid:data2[0].id,
+                        qty:receivedData[key],
+                        cid:123456,
+                        payment:"promptpay",
+                        total:0
+                    })
+                    console.log(dataOder);
+                }
+            }
+
+
+
+        } catch (error) {
+            console.error(error);  // จัดการข้อผิดพลาด
+        }
+    }
+    getData();
+});
 router.post('/checkout',(req,res)=>{ 
     //1.save customer
     let datac = new Customer({
-        cid:"14236589",
+        cid:"14236590",
         firstName:req.body.name,
         lastName:req.body.last,
         address:req.body.address,
@@ -65,6 +108,7 @@ router.post('/checkout',(req,res)=>{
     try{
         Customer.seveCustomer(datac)
         res.send(datac);
+        console.log(datac);
         // res.redirect('/manage')
     }catch(err){console.error('Error saving user:', err);}
 
@@ -72,7 +116,11 @@ router.post('/checkout',(req,res)=>{
       //ชำระด้วย
       console.log(req.body.promptpay);
       //id ,count
-      console.log(req.body.dt);
+    //   let dt = req.body.dt;
+    //   let array = dt.split(",");
+    //   console.log(req.query);
+    //   console.log(req.body.dt);
+
       //check id ,count
 
       //3.oder
