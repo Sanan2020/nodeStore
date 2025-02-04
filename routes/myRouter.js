@@ -4,6 +4,7 @@ const Customer = require('../models/customers')
 const Oder = require('../models/oders')
 const router = express.Router()
 
+let receivedData;
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination:function(req,file,cb){
@@ -53,89 +54,129 @@ router.get('/checkout',(req,res)=>{
     res.render('shop/checkout')
 });
 
-router.get('/check',(req,res)=>{ 
-//2
-    // console.log('Received data:',req.query);
-    let receivedData = req.query;
+router.get('/checkout-data',(req,res)=>{ 
+//2 +pid ,count ,cid
+     receivedData = req.query;
+    // console.log('Received data:',receivedData);
 
     async function getData() {
-        try {
-            const data = await Product.find({}).exec();  // รอผลลัพธ์จากการค้นหา
-           // console.log(data);  // แสดงข้อมูล
+      for (let key in receivedData) {
+        if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
+        console.log(`Key: ${key}, Value: ${receivedData[key]}`);
 
-           let data2;
-            for (let key in receivedData) {
-                if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
-                // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
+            const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
+            // console.log(data.price);
+            // listData.push(data.price);
 
-                    data2 = data.filter(function(item) {
-                        return item._id == key;
-                    });
-                    console.log(`${data2[0].id} ,${receivedData[key]}`);
-                    //console.log(`${data2[0].id} ,${data2[0].price * receivedData[key]}`);
+        // Product.findById(key)
+        // .then(product => {
+        //     console.log(product.price);
+        //      listData.push({pid:key,quantity: receivedData[key],price:product.price});
+        //      console.log(listData);
+        //     // dataOder.products.push({pid:key,quantity: receivedData[key],price:dataOder.products})
+        //     // dataOder.products.push({pid:key,quantity: receivedData[key]})
+        //     // console.log(dataOder.products);
+        // }).catch(error => {
+        // console.error('Error finding product:', error);
+        // });
 
-                    //3
-                    let dataOder = new Oder({
-                        oid:10000,
-                        pid:data2[0].id,
-                        qty:receivedData[key],
-                        cid:123456,
-                        payment:"promptpay",
-                        total:0
-                    })
-                    console.log(dataOder);
-                }
-            }
-
-
-
-        } catch (error) {
-            console.error(error);  // จัดการข้อผิดพลาด
+         // dataOder.products.push({pid:key})
+         //     data2 = data.filter(function(item) {
+         //         return item._id == key;
+         //     });
+         //    console.log(`${data2[0].id} ,${receivedData[key]}`);
+         //     console.log(`${data2[0].id} ,${data2[0].price * receivedData[key]}`);
         }
     }
-    getData();
+    return listData;
+}
+// getData(receivedData).then(() => {
+//     console.log(listData);  // ผลลัพธ์ทั้งหมดจากการ push
+//     // console.log(prod);
+// });
+    // console.log('da:',da);
 });
 router.post('/checkout',(req,res)=>{ 
-    //1.save customer
-    let datac = new Customer({
-        cid:"14236590",
-        firstName:req.body.name,
-        lastName:req.body.last,
-        address:req.body.address,
-        email:req.body.email,
-        phone:req.body.phone,
-    })
     try{
-        Customer.seveCustomer(datac)
-        res.send(datac);
-        console.log(datac);
-        // res.redirect('/manage')
+        //1.save customer หากมีแล้วจะทำการแก้ไขข้อมูลเดิม
+        let datac = new Customer({
+            cid:"14236590",
+            firstName:req.body.name,
+            lastName:req.body.last,
+            address:req.body.address,
+            email:req.body.email,
+            phone:req.body.phone,
+        });
+        // Customer.seveCustomer(datac)
     }catch(err){console.error('Error saving user:', err);}
 
     //2.data for oder
-      //ชำระด้วย
-      console.log(req.body.promptpay);
-      //id ,count
-    //   let dt = req.body.dt;
-    //   let array = dt.split(",");
-    //   console.log(req.query);
-    //   console.log(req.body.dt);
+        //ชำระด้วย
+        let payment = req.body.promptpay;
+        //check id ,count 
 
-      //check id ,count
+    //3.create oder
+    let dataOder = new Oder({
+        // orderId:1025,
+        orderId:Date.now(),
+        products: [
+            {
+                // pid: data._id,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
+                pid: 101,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
+                quantity: 0,
+                price: 0
+            }],
+        // qty:receivedData[key],
+        // customer:data._id,
+        customer: 1010,
+        payment:{
+            method: payment,
+        },
+        total:0,
+        // orderDate:
+    });
 
-      //3.oder
-        //create oder
-        //save oder
+    async function getData() {
+        for (let key in receivedData) {
+            if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
+                // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
+                const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
+                dataOder.products.push({pid:key,quantity: receivedData[key],price:data.price})
+            }
+        }
+    }
+    getData(receivedData).then(() => {
+    //   console.log("dp ",dataOder.products);
+        dataOder.total = dataOder.products.reduce((total, product) => {
+        return total + (product.price * product.quantity);
+    }, 0);
+    // console.log(dataOder.total);  // แสดงผลยอดรวม
+    Oder.seveOder(dataOder);
+    });
 
-    // res.render('shop/payment')
+    res.redirect('/payment');
 });
 
-router.post('/payment',(req,res)=>{ 
+router.get('/payment',(req,res)=>{ 
     //1.show detail oder
-
-    //2.show image qr
+    // console.log(display);
+    //2.show image qr   
 
     //3.status oder
+
+    Oder.findOne({orderId:'1738683804249'}).exec().then(doc => {
+        // console.log(doc);
+        const formattedDate = doc.orderDate.toLocaleDateString('th-TH'); 
+        displayOrder = `| ${doc.orderId} | ${doc.payment.method} 
+        | ${doc.total} | ${formattedDate} |
+        `;
+
+        res.render('shop/payment',{disOrder:displayOrder});
+        console.log(doc.orderId);
+    }).catch(err => { 
+        console.error('Error:', err);
+        res.status(500).send('Internal Server Error');
+    });
 });
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder

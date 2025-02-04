@@ -252,9 +252,7 @@
         let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
         console.log(cartLocal);
         let sumTotal = 0;
-        let cart = [
- 
-        ];
+        let cart = [];
         if (cartLocal.length > 0) {
             let cartHTML = '';
             cartLocal.forEach(function (item) {
@@ -282,7 +280,7 @@
             data.item1 = { product: 'Laptop', price: 1000 };
             data.item1 = { product: 'Laptop', price: 1000 };
             const queryString = new URLSearchParams(cart).toString();
-            const url = `http://localhost:8080/check?${queryString}`;
+            const url = `http://localhost:8080/checkout-data?${queryString}`;
 
             fetch(url)
                 .then(response => response.json())
