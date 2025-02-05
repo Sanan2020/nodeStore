@@ -39,7 +39,7 @@ let oderSchema = mongoose.Schema({
   }],
   payment: {
       method: { type: String, required: true },
-      // status: { type: String, required: true },
+      status: { type: String, required: true },
       // transactionId: { type: String }
   },
   // status: { type: String, default: 'Pending', enum: ['Pending', 'Shipped', 'Delivered', 'Canceled'] },

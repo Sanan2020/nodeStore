@@ -86,6 +86,7 @@ function cartUpdateitem(){
     //sumTotal
     $('#sumTotal').html('฿'+sumTotal);
     $('#btnSumTotal').html('฿'+sumTotal);
+    $('#sumList').html(cartLocal.length);
     } else {
       $("#tbn").css('display','none');
       $("#NotcartItems").css('display','flex');

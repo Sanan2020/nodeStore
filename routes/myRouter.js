@@ -5,6 +5,8 @@ const Oder = require('../models/oders')
 const router = express.Router()
 
 let receivedData;
+let TestOID;
+
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination:function(req,file,cb){
@@ -114,11 +116,15 @@ router.post('/checkout',(req,res)=>{
         //ชำระด้วย
         let payment = req.body.promptpay;
         //check id ,count 
-
+    
+        let dateNow = Date.now();
+        TestOID = dateNow;
+        // console.log(dateNow);
+        
     //3.create oder
     let dataOder = new Oder({
         // orderId:1025,
-        orderId:Date.now(),
+        orderId:dateNow,
         products: [
             {
                 // pid: data._id,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
@@ -131,9 +137,11 @@ router.post('/checkout',(req,res)=>{
         customer: 1010,
         payment:{
             method: payment,
+            status:'รอชำระเงิน',
         },
+        // status:'',
         total:0,
-        // orderDate:
+        orderDate:0,
     });
 
     async function getData() {
@@ -146,37 +154,35 @@ router.post('/checkout',(req,res)=>{
         }
     }
     getData(receivedData).then(() => {
-    //   console.log("dp ",dataOder.products);
         dataOder.total = dataOder.products.reduce((total, product) => {
         return total + (product.price * product.quantity);
     }, 0);
     // console.log(dataOder.total);  // แสดงผลยอดรวม
     Oder.seveOder(dataOder);
-    });
-
     res.redirect('/payment');
+    });
 });
 
 router.get('/payment',(req,res)=>{ 
-    //1.show detail oder
-    // console.log(display);
+    //1.show detail oder +ui order +ref oid test/
     //2.show image qr   
-
     //3.status oder
 
-    Oder.findOne({orderId:'1738683804249'}).exec().then(doc => {
+    Oder.findOne({orderId:TestOID}).exec().then(doc => {
         // console.log(doc);
         const formattedDate = doc.orderDate.toLocaleDateString('th-TH'); 
-        displayOrder = `| ${doc.orderId} | ${doc.payment.method} 
-        | ${doc.total} | ${formattedDate} |
-        `;
-
-        res.render('shop/payment',{disOrder:displayOrder});
-        console.log(doc.orderId);
+        // displayOrder =  doc.orderId , doc.payment.method
+        // doc.total , formattedDate;
+ 
+        res.render('shop/payment',{orderId:doc.orderId , payment:doc.payment.method
+            ,total:doc.total , orderDate:formattedDate ,status:doc.payment.status});
+        console.log(formattedDate);
     }).catch(err => { 
         console.error('Error:', err);
         res.status(500).send('Internal Server Error');
     });
+
+    //4.user -> page track order
 });
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
