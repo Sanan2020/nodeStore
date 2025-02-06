@@ -57,46 +57,9 @@ router.get('/checkout',(req,res)=>{
 });
 
 router.get('/checkout-data',(req,res)=>{ 
-//2 +pid ,count ,cid
-     receivedData = req.query;
+    //2 +pid ,count ,cid
+    receivedData = req.query;
     // console.log('Received data:',receivedData);
-
-    async function getData() {
-      for (let key in receivedData) {
-        if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
-        console.log(`Key: ${key}, Value: ${receivedData[key]}`);
-
-            const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
-            // console.log(data.price);
-            // listData.push(data.price);
-
-        // Product.findById(key)
-        // .then(product => {
-        //     console.log(product.price);
-        //      listData.push({pid:key,quantity: receivedData[key],price:product.price});
-        //      console.log(listData);
-        //     // dataOder.products.push({pid:key,quantity: receivedData[key],price:dataOder.products})
-        //     // dataOder.products.push({pid:key,quantity: receivedData[key]})
-        //     // console.log(dataOder.products);
-        // }).catch(error => {
-        // console.error('Error finding product:', error);
-        // });
-
-         // dataOder.products.push({pid:key})
-         //     data2 = data.filter(function(item) {
-         //         return item._id == key;
-         //     });
-         //    console.log(`${data2[0].id} ,${receivedData[key]}`);
-         //     console.log(`${data2[0].id} ,${data2[0].price * receivedData[key]}`);
-        }
-    }
-    return listData;
-}
-// getData(receivedData).then(() => {
-//     console.log(listData);  // ผลลัพธ์ทั้งหมดจากการ push
-//     // console.log(prod);
-// });
-    // console.log('da:',da);
 });
 router.post('/checkout',(req,res)=>{ 
     try{
