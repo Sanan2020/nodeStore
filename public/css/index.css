@@ -6,7 +6,8 @@
 
 .content0-content {
     padding: 10px;
-    background-color: rgb(238, 237, 237);
+    background-color: rgb(252, 241, 241);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 @media screen and (max-width: 991px) {
