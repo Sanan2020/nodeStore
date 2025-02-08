@@ -5,10 +5,10 @@ const Customer = require('../models/customers')
 //++
 // const autoIncrement = require('mongoose-auto-increment');
 // เชื่อมต่อไปยัง MongoDB
-const dbUrl = 'mongodb+srv://admin:123456789123@cluster0.wty1w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const dbUrl = 'mongodb+srv://admin:123456789123@cluster0.wty1w.mongodb.net/productDB'
 mongoose.connect(dbUrl)
   .then(() => {
-    console.log('Database connected successfully');
+    console.log('Database connected successfully [oders]');
   })
   .catch(err => {
     console.log('Database connection error: ', err);
