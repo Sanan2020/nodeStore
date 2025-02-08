@@ -274,11 +274,6 @@
         // });
 
         function sendCart() {
-            const data = {
-               
-            };
-            data.item1 = { product: 'Laptop', price: 1000 };
-            data.item1 = { product: 'Laptop', price: 1000 };
             const queryString = new URLSearchParams(cart).toString();
             const url = `http://localhost:8080/checkout-data?${queryString}`;
 
