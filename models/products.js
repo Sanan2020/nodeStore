@@ -1,7 +1,7 @@
 // ใช้งาน mongoose
 const mongoose = require('mongoose')
 // เชื่อมต่อไปยัง MongoDB
-const dbUrl = 'mongodb://localhost:27017/productDB'
+const dbUrl = 'mongodb+srv://admin:123456789123@cluster0.wty1w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 mongoose.connect(dbUrl)
   .then(() => {
     console.log('Database connected successfully');
