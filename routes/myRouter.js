@@ -7,6 +7,10 @@ const router = express.Router()
 let receivedData;
 let TestOID;
 
+const stripe = require('stripe')('sk_test_51QqHUZ4RszKPv2HXkSCAx7j13kzCCsSfAn3aryM8o8EeICH2GI44aVvL8RK0ED6LN1Zu9983T52KKzN2sYjO3uia00OnmwiBIA')
+// const endpointSecret = 'whsec_...';
+const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+
 const multer = require('multer')
 const storage = multer.diskStorage({
     destination:function(req,file,cb){
@@ -21,14 +25,14 @@ const upload = multer({
 })
 
 //test API
-router.get('/testAPI', (req, res) => {
-    Product.find({}).exec().then(doc => {
-        res.json(doc); // ส่งข้อมูลในรูปแบบ JSON
-    }).catch(err => {
-        console.error('Error:', err);
-        res.status(500).send('Internal Server Error');
-    });
-});
+// router.get('/testAPI', (req, res) => {
+//     Product.find({}).exec().then(doc => {
+//         res.json(doc); // ส่งข้อมูลในรูปแบบ JSON
+//     }).catch(err => {
+//         console.error('Error:', err);
+//         res.status(500).send('Internal Server Error');
+//     });
+// });
 //-----------user------------// home = product + cart + checkout + payment
 router.get('/',(req,res)=>{
     const selectedOption = req.query.option ?? 'ASC';
@@ -61,7 +65,7 @@ router.get('/checkout-data',(req,res)=>{
     receivedData = req.query;
     // console.log('Received data:',receivedData);
 });
-router.post('/checkout',(req,res)=>{ 
+router.post('/checkout',express.json(), async (req,res)=>{ 
     try{
         //1.save customer หากมีแล้วจะทำการแก้ไขข้อมูลเดิม
         let datac = new Customer({
@@ -72,7 +76,7 @@ router.post('/checkout',(req,res)=>{
             email:req.body.email,
             phone:req.body.phone,
         });
-        // Customer.seveCustomer(datac)
+// Customer.seveCustomer(datac)
     }catch(err){console.error('Error saving user:', err);}
 
     //2.data for oder
@@ -83,24 +87,49 @@ router.post('/checkout',(req,res)=>{
         let dateNow = Date.now();
         TestOID = dateNow;
         // console.log(dateNow);
-        
+       
+        ////////
+        const {user, product} = req.body;
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types:['card'],
+            line_items:[
+                {
+                    price_data:{
+                        currency: 'thb',
+                        product_data: {
+                            name: product.name,
+                        },
+                        unit_amount: product.price * 100,
+                    },
+                    quantity: product.quantity,
+                }
+            ],
+            mode: 'payment',
+            success_url: `http://localhost:8080/success.html?id=${456}`,
+            cancel_url: `http://localhost:8080/cancel.html`
+        })
+
+        // console.log(session.id);
+////////
+
     //3.create oder
     let dataOder = new Oder({
         // orderId:1025,
         orderId:dateNow,
+        sessionId: session.id,
         products: [
             {
                 // pid: data._id,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
-                pid: 101,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
-                quantity: 0,
-                price: 0
+                pid: 102,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
+                quantity: 1,
+                price: 199
             }],
         // qty:receivedData[key],
         // customer:data._id,
         customer: 1010,
         payment:{
-            method: payment,
-            status:'รอชำระเงิน',
+            // method: payment,
+            status: session.status,
         },
         // status:'',
         total:0,
@@ -116,15 +145,78 @@ router.post('/checkout',(req,res)=>{
             }
         }
     }
+
     getData(receivedData).then(() => {
         dataOder.total = dataOder.products.reduce((total, product) => {
         return total + (product.price * product.quantity);
     }, 0);
     // console.log(dataOder.total);  // แสดงผลยอดรวม
+    console.log(session);
+    res.json(dataOder)
     Oder.seveOder(dataOder);
-    res.redirect('/payment');
+    // res.redirect('/payment');
     });
+
+
+
+    // res.redirect('/stripe payment');
 });
+
+//webhook
+router.post('/webhook', express.raw({type: 'application/json'}),async (request, response) => {
+    // let event = request.body;
+    let event;
+    // Only verify the event if you have an endpoint secret defined.
+    // Otherwise use the basic event deserialized with JSON.parse
+    if (endpointSecret) {
+      // Get the signature sent by Stripe
+      const signature = request.headers['stripe-signature'];
+      try {
+        event = stripe.webhooks.constructEvent(
+          request.body,
+          signature,
+          endpointSecret
+        );
+      } catch (err) {
+        console.log(`⚠️  Webhook signature verification failed.`, err.message);
+        return response.sendStatus(400);
+      }
+    }
+  
+    // Handle the event
+    switch (event.type) {
+      case 'checkout.session.completed':
+        const paymentIntent = event.data.object;  
+        console.log(paymentIntent);
+
+        // const sessionId = paymentIntent.id;
+        // console.log(sessionId);
+        // const data = paymentIntent.status;
+        // const result = await Oder.findOneAndUpdate({ sessionId }, {"payment.status": 'test' }, { new: true });
+       // const result = await Oder.findOneAndUpdate({sessionId: sessionId}, {customer: 258 }, { new: true });
+        //console.log(result);
+        // Then define and call a method to handle the successful payment intent.
+        // handlePaymentIntentSucceeded(paymentIntent);
+        break;
+
+      default:
+        // Unexpected event type
+        console.log(`Unhandled event type ${event.type}.`);
+    }
+  
+    // Return a 200 response to acknowledge receipt of the event
+    response.send();
+  });    
+
+//success ?
+router.get('/order/:id', async (req, res)=>{
+    const orderId = req.params.id;
+    // const data = await Oder.findById(orderId).exec(); 
+    Oder.findOne({orderId:orderId}).exec().then(doc => {
+        res.json(doc)
+    }).catch(err => {console.error('Error:', err);});
+
+})
 
 router.get('/payment',(req,res)=>{ 
     //1.show detail oder +ui order +ref oid test/

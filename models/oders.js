@@ -22,10 +22,15 @@ let oderSchema = mongoose.Schema({
     // payment:String,
     // total:Number
 
-    orderId: {
+  orderId: {
       type: Number,
       required: true,
       unique: true
+  },
+  sessionId: {
+    type: String,
+    required: true,
+    // unique: true
   },
   customer: { 
       // type: mongoose.Schema.Types.ObjectId, 
@@ -38,7 +43,7 @@ let oderSchema = mongoose.Schema({
       // price: { type: Number, required: true }
   }],
   payment: {
-      method: { type: String, required: true },
+      // method: { type: String, required: true },
       status: { type: String, required: true },
       // transactionId: { type: String }
   },
