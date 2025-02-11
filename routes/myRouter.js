@@ -86,7 +86,6 @@ router.post('/checkout',express.json(), async (req,res)=>{
         let payment = req.body.promptpay;
         //check id ,count 
        
-        ////////
         // const {user, product} = req.body;
         const user = {
             "name": "Mike",
@@ -167,20 +166,15 @@ router.post('/checkout',express.json(), async (req,res)=>{
     console.log(dataOrder); 
     Order.seveOrder(dataOrder);
 
-        // for (let key in receivedData) {
-        //     if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
-        //         // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
-        //         const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
-        //         dataOder.products.push({pid:key,quantity: receivedData[key],price:data.price})
-        //     }
-        // }
+    // for (let key in receivedData) {
+    //     if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
+    //     // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
+    //     const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
+    //     dataOder.products.push({pid:key,quantity: receivedData[key],price:data.price})
+    // }
+    // }
 
-        // dataOrder.total = dataOrder.products.reduce((total, product) => total + product.price * product.quantity, 0);
-        // console.log(dataOrder.total);
-
-        // dataOrder.total = dataOrder.products.reduce((total, product) => {
-        //     return total + (product.price * product.quantity);
-        // }, 0);
+    // dataOrder.total = dataOrder.products.reduce((total, product) => total + product.price * product.quantity, 0);
         
     res.redirect(session.url);
     // res.send()
