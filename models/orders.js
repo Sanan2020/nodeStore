@@ -1,7 +1,7 @@
 // ใช้งาน mongoose
 const mongoose = require('mongoose')
-const Product = require('../models/products')
-const Customer = require('../models/customers')
+const Product = require('./products')
+const Customer = require('./customers')
 //++
 // const autoIncrement = require('mongoose-auto-increment');
 // เชื่อมต่อไปยัง MongoDB
@@ -14,7 +14,7 @@ mongoose.connect(dbUrl)
     console.log('Database connection error: ', err);
   });
 // ออกแบบ Schema
-let oderSchema = mongoose.Schema({
+let orderSchema = mongoose.Schema({
     // oid:Number,
     // pid:String,
     // qty:Number,
@@ -54,12 +54,12 @@ let oderSchema = mongoose.Schema({
   // notes: { type: String }
 })
 // สร้าง Model
-let Oder = mongoose.model("oders",oderSchema)
+let Order = mongoose.model("orders",orderSchema)
 
 // ส่งออก Model
-module.exports = Oder;
+module.exports = Order;
 
 //ออกแบบฟังก์ชันบันทึกข้อมมูล
-module.exports.seveOder=function(model,data){
+module.exports.seveOrder=function(model,data){
   model.save(data)
 } 

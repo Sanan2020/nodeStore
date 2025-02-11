@@ -275,7 +275,7 @@
 
         function sendCart() {
             const queryString = new URLSearchParams(cart).toString();
-            const url = `http://localhost:8080/checkout-data?${queryString}`;
+            const url = `/checkout-data?${queryString}`;
 
             fetch(url)
                 .then(response => response.json())

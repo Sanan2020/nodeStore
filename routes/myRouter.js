@@ -1,15 +1,17 @@
 const express = require('express')
 const Product = require('../models/products')
 const Customer = require('../models/customers')
-const Oder = require('../models/oders')
+const Order = require('../models/orders')
 const router = express.Router()
 
 let receivedData;
 let TestOID;
 
-const stripe = require('stripe')('sk_test_51QqHUZ4RszKPv2HXkSCAx7j13kzCCsSfAn3aryM8o8EeICH2GI44aVvL8RK0ED6LN1Zu9983T52KKzN2sYjO3uia00OnmwiBIA')
+// const stripe = require('stripe')('sk_test_51QqHUZ4RszKPv2HXkSCAx7j13kzCCsSfAn3aryM8o8EeICH2GI44aVvL8RK0ED6LN1Zu9983T52KKzN2sYjO3uia00OnmwiBIA')
+const stripe = require('stripe')('sk_test_51QqHUEGOHvu7H7KGBrMRMUjmqPHstPiurAa5iFU3hoApqZyzx39k2RBXOdOEghyncRFVxwtEQ3YdcfsdFGSz6KyY00Yga54qMd')
 // const endpointSecret = 'whsec_...';
 const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+// const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -83,83 +85,105 @@ router.post('/checkout',express.json(), async (req,res)=>{
         //ชำระด้วย
         let payment = req.body.promptpay;
         //check id ,count 
-    
-        let dateNow = Date.now();
-        TestOID = dateNow;
-        // console.log(dateNow);
        
         ////////
-        const {user, product} = req.body;
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types:['card'],
-            line_items:[
-                {
-                    price_data:{
-                        currency: 'thb',
-                        product_data: {
-                            name: product.name,
-                        },
-                        unit_amount: product.price * 100,
-                    },
-                    quantity: product.quantity,
-                }
-            ],
-            mode: 'payment',
-            success_url: `http://localhost:8080/success.html?id=${456}`,
-            cancel_url: `http://localhost:8080/cancel.html`
-        })
+        // const {user, product} = req.body;
+        const user = {
+            "name": "Mike",
+            "address": "this"
+        }
+        const product = [{
+            "name": "Test",
+            "price": 200,
+            "quantity": 1
+        }]
 
-        // console.log(session.id);
-////////
+        const dt = {
+            "name": "Test",
+            "price": 200,
+            "quantity": 2
+        }
+
+        const products = await Promise.all(
+            Object.keys(receivedData).map(async (key) => {
+                const data = await Product.findById(key).exec();
+                    
+                if (!data) {
+                    console.warn(`⚠️ ไม่พบสินค้า ID: ${key}`);
+                    return null;
+                }
+    
+                return {
+                    name: data.name,
+                    quantity: receivedData[key],
+                    price: data.price,
+                };
+            })
+        );
+        console.log(products);
+
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types:['card'],
+        line_items: products.map(product => ({ 
+            price_data:{
+                currency: 'thb',
+                product_data: {
+                    name: product.name,
+                },
+                unit_amount: product.price * 100,
+            }, 
+            quantity: product.quantity,
+        })),
+        mode: 'payment',
+        success_url: `http://localhost:8080/success.html?id=${456}`,
+        cancel_url: `http://localhost:8080/cancel.html`
+    })
+    console.log(session);
 
     //3.create oder
-    let dataOder = new Oder({
-        // orderId:1025,
-        orderId:dateNow,
+    let dataOrder = new Order({
+        orderId: Date.now(),
         sessionId: session.id,
-        products: [
-            {
-                // pid: data._id,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
-                pid: 102,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
-                quantity: 1,
-                price: 199
-            }],
-        // qty:receivedData[key],
-        // customer:data._id,
         customer: 1010,
+        products: products.map(product => ({ 
+            // pid: 102, 
+            name: product.name, 
+            quantity: product.quantity,
+            price: product.price,
+        })),
+        // [{
+        //     pid: 102,  // อ้างอิงไปที่ _id ของสินค้าที่เลือก
+        //     quantity: 1,
+        //     price: 199
+        // }],
         payment:{
-            // method: payment,
+            // method: session.payment_method_types,
             status: session.status,
         },
         // status:'',
-        total:0,
+        total: products.reduce((total, product) => total + product.price * product.quantity, 0),
         orderDate:0,
     });
+    console.log(dataOrder); 
+    Order.seveOrder(dataOrder);
 
-    async function getData() {
-        for (let key in receivedData) {
-            if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
-                // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
-                const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
-                dataOder.products.push({pid:key,quantity: receivedData[key],price:data.price})
-            }
-        }
-    }
+        // for (let key in receivedData) {
+        //     if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
+        //         // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
+        //         const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
+        //         dataOder.products.push({pid:key,quantity: receivedData[key],price:data.price})
+        //     }
+        // }
 
-    getData(receivedData).then(() => {
-        dataOder.total = dataOder.products.reduce((total, product) => {
-        return total + (product.price * product.quantity);
-    }, 0);
-    // console.log(dataOder.total);  // แสดงผลยอดรวม
-    console.log(session);
-    res.json(dataOder)
-    Oder.seveOder(dataOder);
-    // res.redirect('/payment');
-    });
+        // dataOrder.total = dataOrder.products.reduce((total, product) => total + product.price * product.quantity, 0);
+        // console.log(dataOrder.total);
 
-
-
-    // res.redirect('/stripe payment');
+        // dataOrder.total = dataOrder.products.reduce((total, product) => {
+        //     return total + (product.price * product.quantity);
+        // }, 0);
+        
+    res.redirect(session.url);
+    // res.send()
 });
 
 //webhook
@@ -178,7 +202,7 @@ router.post('/webhook', express.raw({type: 'application/json'}),async (request, 
           endpointSecret
         );
       } catch (err) {
-        console.log(`⚠️  Webhook signature verification failed.`, err.message);
+        console.log(`Webhook signature verification failed.`, err.message);
         return response.sendStatus(400);
       }
     }
@@ -186,15 +210,17 @@ router.post('/webhook', express.raw({type: 'application/json'}),async (request, 
     // Handle the event
     switch (event.type) {
       case 'checkout.session.completed':
+    //   case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;  
         console.log(paymentIntent);
 
-        // const sessionId = paymentIntent.id;
-        // console.log(sessionId);
-        // const data = paymentIntent.status;
-        // const result = await Oder.findOneAndUpdate({ sessionId }, {"payment.status": 'test' }, { new: true });
-       // const result = await Oder.findOneAndUpdate({sessionId: sessionId}, {customer: 258 }, { new: true });
-        //console.log(result);
+        const sessionId = paymentIntent.id;
+        console.log(sessionId);
+        const status = paymentIntent.status;
+        console.log(status);
+
+       const result = await Order.findOneAndUpdate({sessionId: sessionId}, {"payment.status": status }, { new: true });
+        console.log(result);
         // Then define and call a method to handle the successful payment intent.
         // handlePaymentIntentSucceeded(paymentIntent);
         break;
