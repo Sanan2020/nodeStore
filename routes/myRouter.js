@@ -120,8 +120,8 @@ router.post('/checkout',express.json(), async (req,res)=>{
             quantity: product.quantity,
         })),
         mode: 'payment',
-        success_url: `/success?orderId=${createOrderId}`,
-        cancel_url: `/cancel`
+        success_url: `http://localhost:4000/success?orderId=${createOrderId}`,
+        cancel_url: `http://localhost:4000/cancel`
     })
     console.log(session);
 
