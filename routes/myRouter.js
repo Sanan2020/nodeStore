@@ -10,8 +10,8 @@ let TestOID;
 // const stripe = require('stripe')('sk_test_51QqHUZ4RszKPv2HXkSCAx7j13kzCCsSfAn3aryM8o8EeICH2GI44aVvL8RK0ED6LN1Zu9983T52KKzN2sYjO3uia00OnmwiBIA')
 const stripe = require('stripe')('sk_test_51QqHUEGOHvu7H7KGBrMRMUjmqPHstPiurAa5iFU3hoApqZyzx39k2RBXOdOEghyncRFVxwtEQ3YdcfsdFGSz6KyY00Yga54qMd')
 
-// const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
-const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
+const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+// const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -62,12 +62,12 @@ router.get('/checkout',(req,res)=>{
     res.render('shop/checkout')
 });
 
-router.get('/checkout-data',(req,res)=>{ 
-    //2 +pid ,count ,cid
-    receivedData = req.query;
-    // console.log('Received data:',receivedData);
-});
 router.post('/checkout',express.json(), async (req,res)=>{ 
+    const { customer, order } = req.body;
+
+    console.log("✅ ข้อมูลลูกค้า:", customer);
+    console.log("✅ รายการสินค้า:", order);
+    
     try{
         //1.save customer หากมีแล้วจะทำการแก้ไขข้อมูลเดิม
         let datac = new Customer({
@@ -78,49 +78,34 @@ router.post('/checkout',express.json(), async (req,res)=>{
             email:req.body.email,
             phone:req.body.phone,
         });
-// Customer.seveCustomer(datac)
+        // Customer.seveCustomer(datac)
     }catch(err){console.error('Error saving user:', err);}
 
-    //2.data for oder
+        //2.data for oder
         //ชำระด้วย
-        let payment = req.body.promptpay;
-        //check id ,count 
-       
-        // const {user, product} = req.body;
-        const user = {
-            "name": "Mike",
-            "address": "this"
-        }
-        const product = [{
-            "name": "Test",
-            "price": 200,
-            "quantity": 1
-        }]
+        // let payment = req.body.promptpay;
 
-        const dt = {
-            "name": "Test",
-            "price": 200,
-            "quantity": 2
-        }
-
+        //products
         const products = await Promise.all(
-            Object.keys(receivedData).map(async (key) => {
-                const data = await Product.findById(key).exec();
+            order.map(async ([productId, quantity]) => { // 📌 ดึงค่า productId และ quantity ออกจากอาร์เรย์
+                const data = await Product.findById(productId).exec();
                     
                 if (!data) {
-                    console.warn(`⚠️ ไม่พบสินค้า ID: ${key}`);
-                    return null;
+                    console.warn(`⚠️ ไม่พบสินค้า ID: ${productId}`);
+                    return null; // ข้ามสินค้าที่หาไม่เจอ
                 }
-    
+        
                 return {
                     name: data.name,
-                    quantity: receivedData[key],
+                    quantity: quantity,
                     price: data.price,
                 };
             })
         );
+        console.log(`===products===`);
         console.log(products);
 
+    //3.create session
     const session = await stripe.checkout.sessions.create({
         payment_method_types:['card'],
         line_items: products.map(product => ({ 
@@ -139,7 +124,7 @@ router.post('/checkout',express.json(), async (req,res)=>{
     })
     console.log(session);
 
-    //3.create oder
+    //4.create oder
     let dataOrder = new Order({
         orderId: Date.now(),
         sessionId: session.id,
@@ -166,18 +151,10 @@ router.post('/checkout',express.json(), async (req,res)=>{
     console.log(dataOrder); 
     Order.seveOrder(dataOrder);
 
-    // for (let key in receivedData) {
-    //     if (receivedData.hasOwnProperty(key)) { // ตรวจสอบว่าเป็นคีย์ที่มีอยู่ในอ็อบเจกต์
-    //     // console.log(`Key: ${key}, Value: ${receivedData[key]}`);
-    //     const data = await Product.findById(key).exec();  // รอผลลัพธ์จากการค้นหา
-    //     dataOder.products.push({pid:key,quantity: receivedData[key],price:data.price})
-    // }
-    // }
-
     // dataOrder.total = dataOrder.products.reduce((total, product) => total + product.price * product.quantity, 0);
-        
-    res.redirect(session.url);
-    // res.send()
+    // res.redirect(session.url);
+    // res.json({ url: session.url });
+    res.json({ sessid: session.id });
 });
 
 //webhook

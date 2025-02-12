@@ -147,32 +147,31 @@
     <div style="margin-top: 105px;"></div>
     <!-- Checkout Section -->
     <div class="container mt-5">
-        <form id="checkout-form" action="/checkout" method="post">
+        <!-- <form id="checkout-form" action="/checkout" method="post"> -->
+        <form id="checkout-form">
             <div class="row">
                 <div class="col-lg-7 data">
                     <h4>ข้อมูลที่อยู่ในการจัดส่ง</h4>
                     <div class="mb-3">
                         <label for="name" class="form-label">ชื่อ</label>
-                        <input value="test1" type="text" name="name" id="name" class="form-control" placeholder="ชื่อ"
-                            required>
+                        <input value="test1" type="text" id="name" class="form-control" placeholder="ชื่อ" required>
                         <label for="name" class="form-label">นามสกุล</label>
-                        <input value="test2" type="text" name="last" id="name" class="form-control"
-                            placeholder="นามสกุล" required>
+                        <input value="test2" type="text" id="last" class="form-control" placeholder="นามสกุล" required>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">ที่อยู่</label>
-                        <textarea id="address" name="address" class="form-control" rows="3" placeholder="ที่อยู่"
+                        <textarea id="address" class="form-control" rows="3" placeholder="ที่อยู่"
                             required>test3</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">อีเมล</label>
-                        <input value="test4@gmail.com" type="email" name="email" id="email" class="form-control"
-                            placeholder="อีเมล" required>
+                        <input value="test4@gmail.com" type="email" id="email" class="form-control" placeholder="อีเมล"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">เบอร์ติดต่อ</label>
-                        <input value="0101100110" type="tel" name="phone" id="phone" class="form-control"
-                            placeholder="เบอร์ติดต่อ" required>
+                        <input value="0101100110" type="tel" id="phone" class="form-control" placeholder="เบอร์ติดต่อ"
+                            required>
                     </div>
 
                     <h4>เลือกช่องทางการชำระเงิน</h4>
@@ -191,7 +190,7 @@
                         <div class="payment-method">
                             <i class="fas fa-qrcode"></i> <!-- ไอคอน QR Code สำหรับ PromptPay -->
                             <label for="promptpay" class="ms-2">
-                                <input type="radio" id="promptpay" name="promptpay" value="promptpay" checked> PromptPay
+                                <input type="radio" id="promptpay" value="promptpay" checked> PromptPay
                             </label>
                         </div>
                     </div>
@@ -205,8 +204,6 @@
                             <h4>คำสั่งซื้อของคุณ</h4>
                         </div>
                         <div id="list">Not found data...</div>
-                        <!-- <textarea name="dt" id="area"></textarea> -->
-                        <!-- <input id="rt" type="text" name="dt" /> -->
 
                         <hr>
                         <div style="display: flex;">
@@ -227,7 +224,7 @@
                         <p>ยอดรวมทั้งหมด</p>
                         <div style="display: flex; justify-content: center;">
                             <button type="submit" class="btn-command" style="text-decoration: none; cursor: pointer;"
-                                onclick="sendCart()">
+                                onclick="">
                                 <div class="des">ชำระเงิน</div>
                                 <div style="display: flex; color: #ddd; margin-right: 5px;">
                                     ฿<div id="listTotalbtn"></div>
@@ -247,6 +244,7 @@
     <!-- <script src="/js/cart.js"></script> -->
     <!-- Bootstrap 5 JS -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
         // $(document).ready(function () {
         let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
@@ -259,10 +257,7 @@
                 cartHTML +=
                     ` <div>${item.name} x ${item.count} ฿${item.price * item.count}</div>    `;
                 sumTotal += (item.price * item.count);
-                // cart.p
-                // cart += ([item.id,item.count]); 
-                cart.push([item.id,item.count]); 
-                // cart[0][1].pust(item.count); 
+                cart.push([item.id, item.count]);
             });
             $("#list").html(cartHTML);
             $("#listSum").html(cartLocal.length);
@@ -273,15 +268,49 @@
         }
         // });
 
-        function sendCart() {
-            const queryString = new URLSearchParams(cart).toString();
-            const url = `/checkout-data?${queryString}`;
+        document.getElementById("checkout-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-            fetch(url)
-                .then(response => response.json())
-                // .then(data => console.log(data))
-                .catch(error => console.error('Error:', error));
-        }
+            const customer = {
+                name: document.getElementById("name").value,
+                last: document.getElementById("last").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                address: document.getElementById("address").value
+            };
+
+            const order = cart;
+
+            const orderData = {
+                customer,
+                order
+            };
+            console.log("ข้อมูลที่ส่งไปเซิร์ฟเวอร์:", orderData);
+
+            // ส่งข้อมูลไปที่ Backend
+            try {
+                const stripe = Stripe('pk_test_51QqHUEGOHvu7H7KG8p2jHcQSqiPDIVLiU5jhHDgyq8KVj7tEZxNWPVRyGtiJpX7abU8Hb6D8hBde3vmuOzfpCKLC00XkyX67l9');
+                const response = await fetch("/checkout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+                const sessionId = result.sessid
+                if (sessionId) {
+                    stripe.redirectToCheckout({
+                        sessionId
+                    })
+                } else {
+                    console.error("Error:", data.error);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
     </script>
 
 </body>
