@@ -120,8 +120,8 @@ router.post('/checkout',express.json(), async (req,res)=>{
             quantity: product.quantity,
         })),
         mode: 'payment',
-        success_url: `http://localhost:4000/success?orderId=${createOrderId}`,
-        cancel_url: `http://localhost:4000/cancel`
+        success_url: `https://nodestore-v9a4.onrender.com/success?orderId=${createOrderId}`,
+        cancel_url: `https://nodestore-v9a4.onrender.com/cancel`
     })
     console.log(session);
 
