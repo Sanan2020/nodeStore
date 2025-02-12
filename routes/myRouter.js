@@ -10,8 +10,8 @@ let TestOID;
 // const stripe = require('stripe')('sk_test_51QqHUZ4RszKPv2HXkSCAx7j13kzCCsSfAn3aryM8o8EeICH2GI44aVvL8RK0ED6LN1Zu9983T52KKzN2sYjO3uia00OnmwiBIA')
 const stripe = require('stripe')('sk_test_51QqHUEGOHvu7H7KGBrMRMUjmqPHstPiurAa5iFU3hoApqZyzx39k2RBXOdOEghyncRFVxwtEQ3YdcfsdFGSz6KyY00Yga54qMd')
 
-const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
-// const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
+// const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -85,6 +85,7 @@ router.post('/checkout',express.json(), async (req,res)=>{
         //ชำระด้วย
         // let payment = req.body.promptpay;
 
+        const createOrderId = Date.now();
         //products
         const products = await Promise.all(
             order.map(async ([productId, quantity]) => { // 📌 ดึงค่า productId และ quantity ออกจากอาร์เรย์
@@ -119,14 +120,14 @@ router.post('/checkout',express.json(), async (req,res)=>{
             quantity: product.quantity,
         })),
         mode: 'payment',
-        success_url: `http://localhost:8080/success.html?id=${456}`,
-        cancel_url: `http://localhost:8080/cancel.html`
+        success_url: `http://localhost:4000/success?orderId=${createOrderId}`,
+        cancel_url: `http://localhost:4000/cancel`
     })
     console.log(session);
 
     //4.create oder
     let dataOrder = new Order({
-        orderId: Date.now(),
+        orderId: createOrderId,
         sessionId: session.id,
         customer: 1010,
         products: products.map(product => ({ 
@@ -205,37 +206,39 @@ router.post('/webhook', express.raw({type: 'application/json'}),async (request, 
     response.send();
   });    
 
-//success ?
-router.get('/order/:id', async (req, res)=>{
-    const orderId = req.params.id;
-    // const data = await Oder.findById(orderId).exec(); 
-    Oder.findOne({orderId:orderId}).exec().then(doc => {
-        res.json(doc)
+router.get('/success', (req, res)=>{
+    const orderId = req.query.orderId;
+    console.log(orderId)
+    Order.findOne({orderId:orderId}).exec().then(doc => {
+        res.render('shop/success',{order:doc})
     }).catch(err => {console.error('Error:', err);});
-
 })
 
-router.get('/payment',(req,res)=>{ 
-    //1.show detail oder +ui order +ref oid test/
-    //2.show image qr   
-    //3.status oder
+router.get('/cancel', (req, res)=>{
+    res.render('shop/cancel')
+})
 
-    Oder.findOne({orderId:TestOID}).exec().then(doc => {
-        // console.log(doc);
-        const formattedDate = doc.orderDate.toLocaleDateString('th-TH'); 
-        // displayOrder =  doc.orderId , doc.payment.method
-        // doc.total , formattedDate;
+// router.get('/payment',(req,res)=>{ 
+//     //1.show detail oder +ui order +ref oid test/
+//     //2.show image qr   
+//     //3.status oder
+
+//     Oder.findOne({orderId:TestOID}).exec().then(doc => {
+//         // console.log(doc);
+//         const formattedDate = doc.orderDate.toLocaleDateString('th-TH'); 
+//         // displayOrder =  doc.orderId , doc.payment.method
+//         // doc.total , formattedDate;
  
-        res.render('shop/payment',{orderId:doc.orderId , payment:doc.payment.method
-            ,total:doc.total , orderDate:formattedDate ,status:doc.payment.status});
-        console.log(formattedDate);
-    }).catch(err => { 
-        console.error('Error:', err);
-        res.status(500).send('Internal Server Error');
-    });
+//         res.render('shop/payment',{orderId:doc.orderId , payment:doc.payment.method
+//             ,total:doc.total , orderDate:formattedDate ,status:doc.payment.status});
+//         console.log(formattedDate);
+//     }).catch(err => { 
+//         console.error('Error:', err);
+//         res.status(500).send('Internal Server Error');
+//     });
 
-    //4.user -> page track order
-});
+//     //4.user -> page track order
+// });
 
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
 router.get('/login',(req,res)=>{

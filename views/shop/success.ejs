@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>ชำระเงินเสร็จสมบูรณ์ ✅</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .container { margin-top: 50px; }
+        h1 { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ การชำระเงินเสร็จสมบูรณ์</h1>
+        <p>ขอบคุณที่สั่งซื้อ! หมายเลขคำสั่งซื้อของคุณคือ: <strong id="orderId"></strong></p>
+        <a class="btn btn-success" href="/">กลับไปที่หน้าหลัก</a>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("orderId").innerText = urlParams.get("orderId") || "ไม่มีหมายเลขคำสั่งซื้อ";
+    </script>
+</body>
+</html>
