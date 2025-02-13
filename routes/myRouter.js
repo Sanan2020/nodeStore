@@ -4,14 +4,11 @@ const Customer = require('../models/customers')
 const Order = require('../models/orders')
 const router = express.Router()
 
-let receivedData;
-let TestOID;
-
 // const stripe = require('stripe')('sk_test_51QqHUZ4RszKPv2HXkSCAx7j13kzCCsSfAn3aryM8o8EeICH2GI44aVvL8RK0ED6LN1Zu9983T52KKzN2sYjO3uia00OnmwiBIA')
 const stripe = require('stripe')('sk_test_51QqHUEGOHvu7H7KGBrMRMUjmqPHstPiurAa5iFU3hoApqZyzx39k2RBXOdOEghyncRFVxwtEQ3YdcfsdFGSz6KyY00Yga54qMd')
 
-// const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
-const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
+const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+// const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -26,15 +23,6 @@ const upload = multer({
     storage:storage
 })
 
-//test API
-// router.get('/testAPI', (req, res) => {
-//     Product.find({}).exec().then(doc => {
-//         res.json(doc); // ส่งข้อมูลในรูปแบบ JSON
-//     }).catch(err => {
-//         console.error('Error:', err);
-//         res.status(500).send('Internal Server Error');
-//     });
-// });
 //-----------user------------// home = product + cart + checkout + payment
 router.get('/',(req,res)=>{
     const selectedOption = req.query.option ?? 'ASC';
@@ -120,8 +108,10 @@ router.post('/checkout',express.json(), async (req,res)=>{
             quantity: product.quantity,
         })),
         mode: 'payment',
-        success_url: `https://nodestore-v9a4.onrender.com/success?orderId=${createOrderId}`,
-        cancel_url: `https://nodestore-v9a4.onrender.com/cancel`
+        success_url: `http://localhost:4000/success?orderId=${createOrderId}`,
+        cancel_url: `http://localhost:4000/cancel`
+        // success_url: `https://nodestore-v9a4.onrender.com/success?orderId=${createOrderId}`,
+        // cancel_url: `https://nodestore-v9a4.onrender.com/cancel`
     })
     console.log(session);
 
