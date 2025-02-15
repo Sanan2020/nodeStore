@@ -6,9 +6,9 @@ const router = express.Router()
 
 require('dotenv').config(); //++
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233' || process.env.STRIPE_WEBHOOK_SECRET;
 // const endpointSecret = ''; 
-const BASE_URL = process.env.BASE_URL || "http://localhost:4000";
+const BASE_URL = "http://localhost:4000" || process.env.BASE_URL;
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -40,6 +40,7 @@ router.get('/register', registerController)
 router.get('/forgot_password', forgotController)
 
 router.get('/checkout',(req,res)=>{ 
+    console.log('endpointSecret:',endpointSecret)
     console.log('Environment',BASE_URL)
     res.render('shop/checkout')
 });
