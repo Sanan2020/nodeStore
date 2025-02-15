@@ -6,8 +6,8 @@ const router = express.Router()
 
 require('dotenv').config(); //++
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-// const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX'; 
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+// const endpointSecret = ''; 
 const BASE_URL = process.env.BASE_URL || "http://localhost:4000";
 
 const multer = require('multer')
