@@ -4,11 +4,11 @@ const Customer = require('../models/customers')
 const Order = require('../models/orders')
 const router = express.Router()
 
-// const stripe = require('stripe')('sk_test_51QqHUZ4RszKPv2HXkSCAx7j13kzCCsSfAn3aryM8o8EeICH2GI44aVvL8RK0ED6LN1Zu9983T52KKzN2sYjO3uia00OnmwiBIA')
-const stripe = require('stripe')('sk_test_51QqHUEGOHvu7H7KGBrMRMUjmqPHstPiurAa5iFU3hoApqZyzx39k2RBXOdOEghyncRFVxwtEQ3YdcfsdFGSz6KyY00Yga54qMd')
-
-const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
-// const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX';
+require('dotenv').config(); //++
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+// const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX'; 
+const BASE_URL = process.env.BASE_URL || "http://localhost:4000";
 
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -23,36 +23,29 @@ const upload = multer({
     storage:storage
 })
 
+//++
+const indexController = require('../controllers/indexController')
+const productController = require('../controllers/productController')
+const cartController = require('../controllers/cartController')
+const loginController = require('../controllers/loginController')
+const registerController = require('../controllers/registerController')
+const forgotController = require('../controllers/forgotController')
+
 //-----------user------------// home = product + cart + checkout + payment
-router.get('/',(req,res)=>{
-    const selectedOption = req.query.option ?? 'ASC';
-    const sortOrder = selectedOption === 'ASC' ? 1 : -1;
-
-    console.log(selectedOption);
-    Product.find({}).sort({ price: sortOrder }).exec().then(doc => {
-        res.render('shop/index',{products:doc ,selectedOption: selectedOption})
-    }).catch(err => {console.error('Error:', err);});
-});
-
-router.get('/detail/:id',(req,res)=>{
-    const product_id = req.params.id
-    Product.findOne({_id:product_id}).exec().then(doc => {
-        res.render('shop/product',{product:doc})
-    }).catch(err => {console.error('Error:', err);});
-    
-});
-
-router.get('/cart',(req,res)=>{ 
-    res.render('shop/cart')
-});
+router.get('/',indexController)
+router.get('/product/:id', productController)
+router.get('/cart', cartController)
+router.get('/login', loginController)
+router.get('/register', registerController)
+router.get('/forgot_password', forgotController)
 
 router.get('/checkout',(req,res)=>{ 
+    console.log('Environment',BASE_URL)
     res.render('shop/checkout')
 });
 
 router.post('/checkout',express.json(), async (req,res)=>{ 
     const { customer, order } = req.body;
-
     console.log("✅ ข้อมูลลูกค้า:", customer);
     console.log("✅ รายการสินค้า:", order);
     
@@ -108,8 +101,8 @@ router.post('/checkout',express.json(), async (req,res)=>{
             quantity: product.quantity,
         })),
         mode: 'payment',
-        success_url: `http://localhost:4000/success?orderId=${createOrderId}`,
-        cancel_url: `http://localhost:4000/cancel`
+        success_url: `${BASE_URL}/success?orderId=${createOrderId}`,
+        cancel_url: `${BASE_URL}/cancel`
         // success_url: `https://nodestore-v9a4.onrender.com/success?orderId=${createOrderId}`,
         // cancel_url: `https://nodestore-v9a4.onrender.com/cancel`
     })
@@ -208,32 +201,7 @@ router.get('/cancel', (req, res)=>{
     res.render('shop/cancel')
 })
 
-// router.get('/payment',(req,res)=>{ 
-//     //1.show detail oder +ui order +ref oid test/
-//     //2.show image qr   
-//     //3.status oder
-
-//     Oder.findOne({orderId:TestOID}).exec().then(doc => {
-//         // console.log(doc);
-//         const formattedDate = doc.orderDate.toLocaleDateString('th-TH'); 
-//         // displayOrder =  doc.orderId , doc.payment.method
-//         // doc.total , formattedDate;
- 
-//         res.render('shop/payment',{orderId:doc.orderId , payment:doc.payment.method
-//             ,total:doc.total , orderDate:formattedDate ,status:doc.payment.status});
-//         console.log(formattedDate);
-//     }).catch(err => { 
-//         console.error('Error:', err);
-//         res.status(500).send('Internal Server Error');
-//     });
-
-//     //4.user -> page track order
-// });
-
 //-----------admin------------// manage = delete + frmedit edit + frminsert insert + oder
-router.get('/login',(req,res)=>{
-    res.render('login')
-})
 
 router.post('/login',(req,res)=>{
     const email = req.body.email;
@@ -305,10 +273,6 @@ router.get('/delete/:id',(req,res)=>{
 
 //--------------TEST-API-----------------//
 // testSignup
-router.get('/signup', (req, res) => {
-    res.render('signup')
-});
-
 router.post('/testAPI', (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
@@ -318,11 +282,6 @@ router.post('/testAPI', (req, res) => {
 });
 
 //testForgot
-router.get('/forgot', (req, res) => {
-   res.render('forgot')
-});
-
-
 router.post('/testForgot', (req, res) => {
     const email = req.body.email;
     console.log("email: "+email)
