@@ -22,7 +22,7 @@
 
 <body>
     <div class="container mt-5" style="margin-bottom: 50px;">
-        <a class="btn btn-success" style="margin: 18px 0;" href="/frminsert">เพิ่มสินค้า</a>
+        <a class="btn btn-success" style="margin: 18px 0;" href="/insert">เพิ่มสินค้า</a>
         <button class="btn btn-secondary" style="margin: 18px 0;">การสั่งซื้อ</button>
         <table style=" border-collapse: collapse; width: 100%;">
             <tr>
@@ -48,7 +48,7 @@
                     <%= item.description %>
                 </td>
                 <td>
-                    <form action="/frmedit" method="post">
+                    <form action="/edit" method="post">
                         <input type="hidden" name="edit_id" value="<%=item._id%>">
                         <button type="submit" class="btn btn-warning">แก้ไข</button>
                     </form>

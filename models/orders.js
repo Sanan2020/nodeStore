@@ -1,27 +1,6 @@
-// ใช้งาน mongoose
-const mongoose = require('mongoose')
-const Product = require('./products')
-const Customer = require('./customers')
-//++
-// const autoIncrement = require('mongoose-auto-increment');
-// เชื่อมต่อไปยัง MongoDB
-const dbUrl = 'mongodb+srv://admin:123456789123@cluster0.wty1w.mongodb.net/productDB'
-mongoose.connect(dbUrl)
-  .then(() => {
-    console.log('Database connected successfully [oders]');
-  })
-  .catch(err => {
-    console.log('Database connection error: ', err);
-  });
+const mongoose = require("../config/database");
 // ออกแบบ Schema
 let orderSchema = mongoose.Schema({
-    // oid:Number,
-    // pid:String,
-    // qty:Number,
-    // cid:Number,
-    // payment:String,
-    // total:Number
-
   orderId: {
       type: Number,
       required: true,
@@ -43,7 +22,7 @@ let orderSchema = mongoose.Schema({
       // price: { type: Number, required: true }
   }],
   payment: {
-      // method: { type: String, required: true },
+      method: { type: String, required: true },
       status: { type: String, required: true },
       // transactionId: { type: String }
   },
