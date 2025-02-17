@@ -2,12 +2,23 @@ const express = require('express')
 const path = require('path')
 const router = require('./routes/myRouter')
 const app = express()
-const port = process.env.PORT || 4000; //+
-// const expressSession = require('express-session')  //++
-// const flash = require('connect-flash') //++
+const port = process.env.PORT || 4000;
+const session = require('express-session')
+global.loggedIn = null
 
-// app.use(flash()) //++
 // app.use(express.json()) //++
+// ตั้งค่า session middleware
+app.use(session({
+    secret: "mysecretkey",  // 🔑 ใช้สำหรับเข้ารหัส session
+    resave: false,          // 🔄 ไม่บันทึก session ถ้าไม่มีการเปลี่ยนแปลง
+    saveUninitialized: true, // 🚀 ไม่สร้าง session ถ้ายังไม่มีข้อมูล
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 } // 🍪 อายุ session = 1 ชม.
+}));
+app.use('*', (req, res, next) =>{
+    loggedIn = req.session.customerId
+    next()
+})
+
 app.set('views',path.join(__dirname,'views'))
 app.set('view engine','ejs')
 app.use(express.urlencoded({extended:false}))

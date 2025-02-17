@@ -3,7 +3,6 @@ $(document).ready(function() {
   cartUpdateitem();
 });
 
-
 function processSwal(label){
   let timerInterval;
 Swal.fire({
@@ -21,7 +20,12 @@ Swal.fire({
 });
 }
 
-function addtocart(item){
+async function addtocart(item){
+  let response = await fetch("/sessionAddtoCart", { credentials: "include" }); // ⬅️ ส่ง cookies ไปด้วย
+  let data = await response.json();
+  if (data.loggedIn) {
+    console.log("✅ ผู้ใช้ล็อกอินแล้ว:", data.customerId);
+
   itemToOBJ = JSON.parse(item);
   let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
   var pass =true;
@@ -32,7 +36,7 @@ function addtocart(item){
       pass = false;
     }
   }
-console.log(itemToOBJ);
+  console.log(itemToOBJ);
   if(pass){
   var obj = {
         id: itemToOBJ._id,
@@ -47,6 +51,21 @@ console.log(itemToOBJ);
   
   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
   processSwal(cartLocal.length);
+  }else{
+    localStorage.clear()
+    Swal.fire({
+      title: "❌ คุณยังไม่ได้ล็อกอิน",
+      text: "กรุณาเข้าสู่ระบบเพื่อเพิ่มสินค้าในตะกร้า",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ล็อกอิน",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+          window.location.href = "/login";
+      }
+    });
+  }
 }
 
 //cart remove item
@@ -123,39 +142,3 @@ function quantityCount(countId, price){
   $('#sumTotal').html('฿'+sumTotal);
   $('#btnSumTotal').html('฿'+sumTotal);
 }
-
-////////////////////////////////test
-// function addtocart2(item2){
-//   data2 = data.filter(function(item) {
-//     return item._id == item2;
-//   });
-//   console.log(data2);
-//   console.log(data2[0]._id);
-//   console.log('-----');
-
-
-//   let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
-//   var pass =true;
-
-//   for(let i=0;i<cartLocal.length;i++){
-//     if(item2 == cartLocal[i].id){
-//       cartLocal[i].count ++;
-//       pass = false;
-//     }
-//   }
-
- 
-//   if(pass){
-//   var obj = {
-//         id: data2[0]._id,
-//         name:data2[0].name,
-//         description:data2[0].description,
-//         price:data2[0].price,
-//         image:data2[0].image,
-//         count: 1,
-//       };
-//       cartLocal.push(obj);
-//     }
-//   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
-//   processSwal(cartLocal.length);
-// }

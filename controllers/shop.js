@@ -46,17 +46,21 @@ exports.postCheckout = async (req,res)=>{
     const { customer, order } = req.body;
     console.log("ข้อมูลลูกค้า:", customer);
     console.log("รายการสินค้า:", order);
+    const cusId = '67b22eceaff55765fc96e3ee'
     try{
         //1.save customer หากมีแล้วจะทำการแก้ไขข้อมูลเดิม
-        let data = new Customer({
-            cid:"14236590",
+        let dataCus = new Customer({
+            // cid:"14236590",
             firstName:req.body.name,
             lastName:req.body.last,
             address:req.body.address,
-            email:req.body.email,
             phone:req.body.phone,
         });
-        //await Customer.saveCustomer(data)
+        // const updateData = dataCus.toObject()
+        // const cus = await Customer.findOneAndUpdate({ email: "admin@nqqq" },{ $set: updateData },{ new: true })
+        // console.log(cus);
+        // const result = await Order.findOneAndUpdate({sessionId: sessionId}, {"payment.status": status }, { new: true });
+        //await Customer.saveCustomer(data) //update
     }catch(err){console.error('Error saving user:', err);}
         //2.data for oder
         // let payment = req.body.promptpay;
