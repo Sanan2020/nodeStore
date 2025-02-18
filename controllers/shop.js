@@ -43,85 +43,81 @@ exports.getCheckout = (req,res)=>{
 }
 
 exports.postCheckout = async (req,res)=>{ 
-    const { customer, order } = req.body;
-    console.log("ข้อมูลลูกค้า:", customer);
-    console.log("รายการสินค้า:", order);
-    const cusId = '67b22eceaff55765fc96e3ee'
-    try{
-        //1.save customer หากมีแล้วจะทำการแก้ไขข้อมูลเดิม
-        let dataCus = new Customer({
-            // cid:"14236590",
-            firstName:req.body.name,
-            lastName:req.body.last,
-            address:req.body.address,
-            phone:req.body.phone,
-        });
-        // const updateData = dataCus.toObject()
-        // const cus = await Customer.findOneAndUpdate({ email: "admin@nqqq" },{ $set: updateData },{ new: true })
-        // console.log(cus);
-        // const result = await Order.findOneAndUpdate({sessionId: sessionId}, {"payment.status": status }, { new: true });
-        //await Customer.saveCustomer(data) //update
-    }catch(err){console.error('Error saving user:', err);}
-        //2.data for oder
+    try {
+        const { customer, order } = req.body;
+        let { firstName, lastName, address, phone } = customer;
+
+        // 1. อัปเดตข้อมูลอื่นๆ โดยไม่แก้ไข email & password
+        let updatedCustomer = await Customer.findByIdAndUpdate(loggedIn, { firstName, lastName, address, phone },{ new: true } );
+        if (!updatedCustomer) {
+            return res.status(404).json({ message: "ไม่พบลูกค้า" });
+        }
+        console.log(updatedCustomer)
+
+        //2.ดึงข้อมูลสินค้า
         // let payment = req.body.promptpay;
         const createOrderId = Date.now();
-        //products
         const products = await Promise.all(
             order.map(async ([productId, quantity]) => { // ดึงค่า productId และ quantity ออกจากอาร์เรย์
-                const data = await Product.findById(productId).exec();
-                    
+                const data = await Product.findById(productId).exec();       
                 if (!data) {
                     console.warn(`ไม่พบสินค้า ID: ${productId}`);
                     return null; // ข้ามสินค้าที่หาไม่เจอ
                 }
                 return {
+                    pid: productId,
                     name: data.name,
                     quantity: quantity,
                     price: data.price,
                 };
             })
         );
-        console.log(`===products===`);
-        console.log(products);
-    //3.create session
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types:['card'],
-        line_items: products.map(product => ({ 
-            price_data:{
-                currency: 'thb',
-                product_data: {
-                    name: product.name,
-                },
-                unit_amount: product.price * 100,
-            }, 
-            quantity: product.quantity,
-        })),
-        mode: 'payment',
-        success_url: `${BASE_URL}/success?orderId=${createOrderId}`,
-        cancel_url: `${BASE_URL}/cancel`
-    })
-    console.log(session);
-    //4.create oder
-    let dataOrder = new Order({
+        console.log('products:', products);
+
+        //3.create session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types:['card'],
+            line_items: products.map(product => ({ 
+                price_data:{
+                    currency: 'thb',
+                    product_data: {
+                        name: product.name,
+                    },
+                    unit_amount: product.price * 100,
+                }, 
+                quantity: product.quantity,
+            })),
+            mode: 'payment',
+            success_url: `${BASE_URL}/success?orderId=${createOrderId}`,
+            cancel_url: `${BASE_URL}/cancel`
+        })
+        console.log('session:', session);
+
+        //4.create oder
+        let dataOrder = new Order({
         orderId: createOrderId,
-        sessionId: session.id,
-        customer: 1010,
-        products: products.map(product => ({ 
-            // pid: 102, 
-            name: product.name, 
-            quantity: product.quantity,
-            price: product.price,
-        })),
-        payment:{
-            method: session.payment_method_types ? session.payment_method_types[0] : "unknown",
-            status: session.status,
-        },
-        // status:'',
-        total: products.reduce((total, product) => total + product.price * product.quantity, 0),
-    });
-    console.log(dataOrder); 
-    Order.seveOrder(dataOrder);
-    res.json({ sessid: session.id });
+            sessionId: session.id,
+            customer: loggedIn,
+            products: products.map(product => ({ 
+                pid: product.pid, 
+                name: product.name, 
+                quantity: product.quantity,
+                price: product.price,
+            })),
+            payment:{
+                method: session.payment_method_types ? session.payment_method_types[0] : "unknown",
+                status: session.status,
+            },
+            // status:'',
+            total: products.reduce((total, product) => total + product.price * product.quantity, 0),
+        });
+        console.log(dataOrder); 
+        Order.seveOrder(dataOrder);
+
+        res.json({ sessid: session.id });
+    } catch (error) {
+        res.status(500).json({ message: "เกิดข้อผิดพลาด", error });
+    }
 }
 
 exports.postWebhook = async (request, response) => {

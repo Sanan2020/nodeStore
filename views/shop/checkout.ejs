@@ -167,11 +167,11 @@
             event.preventDefault();
 
             const customer = {
-                name: document.getElementById("name").value,
-                last: document.getElementById("last").value,
+                firstName: document.getElementById("name").value,
+                lastName: document.getElementById("last").value,
                 // email: document.getElementById("email").value,
-                phone: document.getElementById("phone").value,
-                address: document.getElementById("address").value
+                address: document.getElementById("address").value,
+                phone: document.getElementById("phone").value
             };
 
             const order = cart;
@@ -201,6 +201,7 @@
                     console.error("Error:", data.error);
                 }
             } catch (error) {
+                console.log(error)
                 console.error("Error:", error);
             }
         });

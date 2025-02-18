@@ -33,20 +33,59 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="/cart"><i class="fas fa-shopping-cart">
                                 <div id="count" class="lb">0</div>
                             </i></a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="cartIcon"><i class="fas fa-shopping-cart">
+                                <div id="count" class="lb">0</div>
+                            </i>
+                        </a>
+                    </li>
+
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                    <script>
+                        document.getElementById("cartIcon").addEventListener("click", function (event) {
+                            event.preventDefault(); // ป้องกันการเปลี่ยนหน้า
+
+                            let logIn = "<%= loggedIn %>"
+                            if (!logIn) {
+                                Swal.fire({
+                                    title: "คุณยังไม่ได้ล็อกอิน",
+                                    text: "กรุณาเข้าสู่ระบบเพื่อดูสินค้าในตะกร้า",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "ล็อกอิน",
+                                    cancelButtonText: "ยกเลิก",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "/login";
+                                    }
+                                });
+                            } else {
+                                window.location.href = "/cart";
+                            }
+
+                        });
+                    </script>
+
+                    <% if(loggedIn){ %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                    <% } %>
+
+                    <% if(!loggedIn){ %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
                     </li>
                     <li class="nav-item">
-                        <% if(loggedIn){ %>
-                        <a class="nav-link" href="/logout">Logout</a>
-                        <% } %>
-
-                        <% if(!loggedIn){ %>
-                        <a class="nav-link" href="/login">Login</a>
-                        <% } %>
+                        <a class="nav-link" href="#"><span style="font-size: 12px; opacity: 0.7;">|</span> Admin Login <span style="font-size: 12px; opacity: 0.7;">|</span></a>
                     </li>
+                    <% } %>
+
                 </ul>
             </div>
         </div>

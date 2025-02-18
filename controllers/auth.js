@@ -47,7 +47,7 @@ exports.postSignup = (req, res) => {
 
     Customer.create(req.body).then(() =>{
         console.log('Customer registered successfuly!')
-        res.redirect('/')
+        res.redirect('/login')
     }).catch((error) =>{
         console.log(error)
     })

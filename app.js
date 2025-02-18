@@ -25,6 +25,6 @@ app.use(express.urlencoded({extended:false}))
 app.use(router)
 app.use(express.static(path.join(__dirname,'public')))
 
-app.listen(port, '0.0.0.0',()=>{ //-+
+app.listen(port, '0.0.0.0',()=>{
     console.log(`Server is running on port ${port}`)
 })

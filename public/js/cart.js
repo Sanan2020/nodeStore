@@ -54,7 +54,7 @@ async function addtocart(item){
   }else{
     localStorage.clear()
     Swal.fire({
-      title: "❌ คุณยังไม่ได้ล็อกอิน",
+      title: "คุณยังไม่ได้ล็อกอิน",
       text: "กรุณาเข้าสู่ระบบเพื่อเพิ่มสินค้าในตะกร้า",
       icon: "warning",
       showCancelButton: true,
