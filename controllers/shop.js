@@ -1,5 +1,5 @@
 const Product = require('../models/products')
-const Customer = require('../models/customers')
+const Account = require('../models/accounts')
 const Order = require('../models/orders')
 const mongoose = require("mongoose");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
@@ -48,7 +48,7 @@ exports.postCheckout = async (req,res)=>{
         let { firstName, lastName, address, phone } = customer;
 
         // 1. อัปเดตข้อมูลอื่นๆ โดยไม่แก้ไข email & password
-        let updatedCustomer = await Customer.findByIdAndUpdate(loggedIn, { firstName, lastName, address, phone },{ new: true } );
+        let updatedCustomer = await Account.findByIdAndUpdate(loggedIn, { firstName, lastName, address, phone },{ new: true } );
         if (!updatedCustomer) {
             return res.status(404).json({ message: "ไม่พบลูกค้า" });
         }

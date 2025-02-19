@@ -26,7 +26,7 @@ let orderSchema = mongoose.Schema({
       status: { type: String, required: true },
       // transactionId: { type: String }
   },
-  // status: { type: String, default: 'Pending', enum: ['Pending', 'Shipped', 'Delivered', 'Canceled'] },
+  status: { type: String, default: 'Pending', enum: ['Pending', 'Shipped', 'Delivered', 'Canceled'] },
   total: { type: Number, required: true },
   orderDate: { type: Date, default: Date.now },
   // shippingAddress: { type: String, required: true },

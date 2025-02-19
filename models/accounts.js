@@ -3,7 +3,7 @@ const mongoose = require("../config/database");
 const bcrypt = require('bcrypt')
 // ออกแบบ Schema
 // const customerSchema = new Schema({
-let customerSchema = mongoose.Schema({
+let accountSchema = mongoose.Schema({
     // cid:Number,
     email:String,
     password:String,
@@ -11,11 +11,12 @@ let customerSchema = mongoose.Schema({
     lastName:String,
     address:String,
     phone:Number,
+    role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
 })
-customerSchema.pre('save', function(next){
-  const customer = this
-  bcrypt.hash(customer.password, 10).then(hash =>{
-    customer.password = hash
+accountSchema.pre('save', function(next){
+  const account = this
+  bcrypt.hash(account.password, 10).then(hash =>{
+    account.password = hash
     next()
   }).catch(err =>{
     console.log(this.errors)
@@ -23,9 +24,9 @@ customerSchema.pre('save', function(next){
 })
 
 // สร้าง Model
-let Customer = mongoose.model("customers",customerSchema)
+let Account = mongoose.model("accounts",accountSchema)
 // ส่งออก Model
-module.exports = Customer;
+module.exports = Account;
 
 //ออกแบบฟังก์ชันบันทึกข้อมมูล
 // module.exports.saveCustomer=function(model,data){

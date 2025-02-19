@@ -9,12 +9,15 @@ const shopController = require('../controllers/shop')
 
 const redirectifAuth = require('../middlewares/redirectifAuth')
 const authMiddleware = require('../middlewares/authMiddleware')
+const adminMiddleware = require('../middlewares/adminMiddleware')
 
 router.get('/login', redirectifAuth, authController.getLogin)
+router.get('/adminLogin', authController.getAdminLogin)
 router.get('/logout', authController.getLogout)
 router.get('/signup', redirectifAuth, authController.getSignup)
 router.get('/forgot', redirectifAuth, authController.getForgot)
 router.post('/login', redirectifAuth, authController.postLogin)
+router.post('/adminLogin', authController.postAdminLogin)
 router.post('/signup', redirectifAuth, authController.postSignup)
 router.post('/forgot', redirectifAuth, authController.postForgot)
 
@@ -33,34 +36,12 @@ router.get('/sessionAddtoCart', (req, res) => {
     res.json({ loggedIn: true, customerId: req.session.customerId });
 });   
 
-router.get('/dashboard', adminController.getDashboard)
-router.get('/insert', adminController.getInsertProduct)
-router.post('/insert', upload.single("image"), adminController.postInsertProduct)
-router.post('/edit', adminController.postEditProduct)
-router.post('/update', adminController.postUpdateProduct)
-router.get('/delete/:id', adminController.getDeleteProduct)
-
-/////testCus
-const Customer = require('../models/customers')
-router.post('/testCus', async (req, res) => {
-    // let data = new Customer({
-    //     // cid:123456,
-    //     // email:'abcd@gmail.com',
-    //     // password:'123456789',
-    //     firstName:'nnn',
-    //     lastName:'lll',
-    //     address:'aaa',
-    //     phone:1234567890,
-    // });
-    // // const updateData = dataCus.toObject()
-    // // const cus = await Customer.findOneAndUpdate({ email: "admin@nqqq" },{ $set: data },{ new: true })
-    // const cus = await Customer.findOne({ email: "admin@nqqq" }).exec()
-    
-    // console.log(cus);
-    // // Customer.saveCustomer(data)
-    // res.send()
-
-  
-}); 
+router.get('/dashboard', adminMiddleware, adminController.getDashboard)
+router.get('/pending', adminMiddleware, adminController.getPending)
+router.get('/insert', adminMiddleware, adminController.getInsertProduct)
+router.post('/insert', adminMiddleware, upload.single("image"), adminController.postInsertProduct)
+router.post('/edit', adminMiddleware, adminController.postEditProduct)
+router.post('/update', adminMiddleware, adminController.postUpdateProduct)
+router.get('/delete/:id', adminMiddleware, adminController.getDeleteProduct)
 
 module.exports = router

@@ -1,9 +1,18 @@
 const Product = require('../models/products')
+const Order = require('../models/orders')
 
 exports.getDashboard = (req,res)=>{
     Product.find({}).exec().then(doc => {
         res.render('admin/dashboard',{products:doc})
     }).catch(err => {console.error('Error:', err);});
+}
+
+exports.getPending = async (req,res)=>{
+    // Order.find({status:'pending'}).exec().then(doc => {
+    //     res.render('admin/pendingOrder',{order:doc})
+    // }).catch(err => {console.error('Error:', err);});
+    const orders = await Order.find({ status: "Pending" });
+    res.render("admin/pendingOrder", { order: orders });
 }
 
 exports.getInsertProduct = (req,res)=>{
