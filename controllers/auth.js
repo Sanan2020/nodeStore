@@ -34,7 +34,7 @@ exports.postLogin = async (req,res)=>{
             if(cmp){
                 req.session.customerId = customer._id
                 req.session.role = customer.role;
-                req.flash("success", "ลูกค้าล็อกอินสำเร็จ!");
+                req.flash("success", `ลูกค้าบัญชี ${customer.email} เข้าสู่ระบบสำเร็จ!`);
                 res.redirect('/')
             }else{
                 req.flash("error", "อีเมลหรือรหัสผ่านลูกค้าไม่ถูกต้อง!");
@@ -60,7 +60,7 @@ exports.postAdminLogin = async (req,res)=>{
             if(cmp){
                 req.session.adminId = admin._id
                 req.session.role = admin.role;
-                req.flash("success", "admin ล็อกอินสำเร็จ!");
+                req.flash("success", `แอดมินบัญชี ${admin.email} เข้าสู่ระบบสำเร็จ!`);
                 res.redirect('/dashboard')
             }else{
                 req.flash("error", "อีเมลหรือรหัสผ่าน admin ไม่ถูกต้อง!");

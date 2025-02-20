@@ -33,6 +33,7 @@
               <th>#</th>
               <th>รหัสใบสั่งซื้อ</th>
               <th>ลูกค้า</th>
+              <th>ยอดชำระ</th>
               <th>สถานะการชำระเงิน</th>
               <th>วันที่สั่งซื้อ</th>
               <th>สถานะการส่งสินค้า</th>
@@ -43,9 +44,10 @@
             <% orders.forEach((order, index) => { %>
               <tr>
                 <td><%= index + 1 %></td>
-                <td><%= order._id %></td>
+                <td><%= order.orderId %></td>
                 <td><%= order.customer ? order.customer.firstName : "ไม่พบข้อมูล" %></td>
-                <td><%= order.customer ? order.payment.status : "ไม่พบข้อมูล" %></td>
+                <td><%= order.customer ? order.total : "ไม่พบข้อมูล" %></td>
+                <td><%= order.payment.status === "complete" ? "ชำระเงินแล้ว" : "รอชำระเงิน" %></td>
                 <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
                 <td><%= order.status %></td>
                 <td>
@@ -84,7 +86,7 @@
                 .then(order => {
                   const orderDetail = document.getElementById("orderDetail");
                   orderDetail.innerHTML = `
-                    <p><strong>เลขที่คำสั่งซื้อ:</strong> ${order._id}</p>
+                    <p><strong>เลขที่คำสั่งซื้อ:</strong> ${order.orderId}</p>
                     <p><strong>วันที่สั่งซื้อ:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
                     
                     <h4>ข้อมูลลูกค้า</h4>
