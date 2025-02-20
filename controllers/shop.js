@@ -3,8 +3,10 @@ const Account = require('../models/accounts')
 const Order = require('../models/orders')
 const mongoose = require("mongoose");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
-const BASE_URL = "http://localhost:4000";
+// const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+// const BASE_URL = "http://localhost:4000";
+const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX'
+BASE_URL = 'https://nodestore-v9a4.onrender.com'
 
 exports.getProducts = async (req, res) =>{
     try {
