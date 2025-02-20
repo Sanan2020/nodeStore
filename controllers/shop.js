@@ -38,8 +38,10 @@ exports.getCart = (req,res)=>{
     res.render('shop/cart')
 }
 
-exports.getCheckout = (req,res)=>{ 
-    res.render('shop/checkout')
+exports.getCheckout = async (req,res)=>{ 
+    const customer = await Account.findById(loggedIn);
+    console.log(customer)
+    res.render('shop/checkout', {customer})
 }
 
 exports.postCheckout = async (req,res)=>{ 

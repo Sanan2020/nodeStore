@@ -4,6 +4,7 @@ const router = require('./routes/myRouter')
 const app = express()
 const port = process.env.PORT || 4000;
 const session = require('express-session')
+const flash = require("connect-flash");//++
 global.loggedIn = null
 
 // app.use(express.json()) //++
@@ -18,7 +19,11 @@ app.use('*', (req, res, next) =>{
     loggedIn = req.session.customerId
     next()
 })
-
+app.use(flash()); //++
+app.use((req, res, next) => {
+    res.locals.messages = req.flash(); // กำหนด messages ให้ใช้งานใน EJS
+    next();
+  })
 app.set('views',path.join(__dirname,'views'))
 app.set('view engine','ejs')
 app.use(express.urlencoded({extended:false}))

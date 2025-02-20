@@ -26,6 +26,37 @@
 </head>
 
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if (messages.success) { %>
+      <script>
+        Swal.fire("สำเร็จ!", "<%= messages.success %>", "success");
+      </script>
+    <% } %>
+    
+    <% if (messages.insert) { %>
+      <script>
+          Swal.fire({
+            title: "สำเร็จ!",
+            text: "<%= messages.insert %>",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false
+          });
+      </script>
+    <% } %>
+
+    <% if (messages.edit) { %>
+        <script>
+          Swal.fire({
+            title: "สำเร็จ!",
+            text: "<%= messages.edit %>",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false
+          });
+        </script>
+      <% } %>
+
     <!-- <body class="p-3 m-0 border-0 bd-example m-0 border-0"> -->
     <div class="container mt-5" style="margin-bottom: 50px;">
         <div style="display: flex; justify-content: end;">
@@ -38,15 +69,8 @@
             <li class="nav-item">
                 <a class="nav-link" href="/pending">คำสั่งซื้อที่รอดำเนินการ</a>
             </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li> -->
         </ul>
         <a class="btn btn-success" style="margin: 18px 0;" href="/insert">เพิ่มสินค้า</a>
-        <!-- <button class="btn btn-secondary" style="margin: 18px 0;">การสั่งซื้อ</button> -->
         
         <table style=" border-collapse: collapse; width: 100%;">
             <tr>
@@ -78,14 +102,27 @@
                     </form>
                 </td>
                 <td>
-                    <a class="btn btn-danger" href="/delete/<%=item._id%>"
-                        onclick="return confirm('คุณต้องการลบหรือไม่?')">ลบ</a>
+                    <a class="btn btn-danger btn-delete" href="/delete/<%=item._id%>">ลบ</a>
                 </td>
             </tr>
             <% }) %>
         </table>
     </div>
 
+    <script>
+        document.querySelectorAll(".btn-delete").forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                const url = this.href;
+                Swal.fire({
+                    title: "ยืนยันการลบ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "ลบเลย!",
+                    cancelButtonText: "ยกเลิก"
+                }).then(result => { if (result.isConfirmed) window.location.href = url; });
+            });
+        });
+        </script>
 </body>
-
 </html>

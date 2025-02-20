@@ -3,6 +3,31 @@
 </head>
 
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if (messages.success) { %>
+      <script>
+        Swal.fire("สำเร็จ!", "<%= messages.success %>", "success");
+      </script>
+    <% } %>
+
+    <script>
+        // เช็คว่า URL มีพารามิเตอร์ ?logout=success หรือไม่
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("logout")) {
+          Swal.fire({
+            title: "ล็อกเอาต์สำเร็จ!",
+            text: "คุณออกจากระบบเรียบร้อยแล้ว",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false
+          });
+      
+          // ลบพารามิเตอร์ออกจาก URL หลังแสดง Swal
+          localStorage.clear()
+          history.replaceState(null, "", window.location.pathname);
+        }
+      </script>
+
     <div class="container" style="margin-top: 136px;">
         <article class="content0-content">
             <h1 style="text-align: center;">Mamon Cake</h1>
@@ -40,7 +65,7 @@
             <% }) %>
         </div>
     </div>
-
+  
     <!-- Product Listing -->
     <div class="container mt-5">
         <div>

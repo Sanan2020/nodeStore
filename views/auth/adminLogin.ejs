@@ -63,6 +63,12 @@
     </style>
 </head>
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if (messages.error) { %>
+        <script>
+          Swal.fire("ผิดพลาด!", "<%= messages.error %>", "error");
+        </script>
+      <% } %>
 
     <!-- Login -->
     <div class="login-container">

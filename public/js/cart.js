@@ -52,7 +52,6 @@ async function addtocart(item){
   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
   processSwal(cartLocal.length);
   }else{
-    localStorage.clear()
     Swal.fire({
       title: "คุณยังไม่ได้ล็อกอิน",
       text: "กรุณาเข้าสู่ระบบเพื่อเพิ่มสินค้าในตะกร้า",

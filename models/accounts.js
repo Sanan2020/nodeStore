@@ -10,7 +10,7 @@ let accountSchema = mongoose.Schema({
     firstName:String,
     lastName:String,
     address:String,
-    phone:Number,
+    phone: {type: String},
     role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
 })
 accountSchema.pre('save', function(next){
@@ -24,7 +24,7 @@ accountSchema.pre('save', function(next){
 })
 
 // สร้าง Model
-let Account = mongoose.model("accounts",accountSchema)
+const Account = mongoose.model("accounts",accountSchema)
 // ส่งออก Model
 module.exports = Account;
 

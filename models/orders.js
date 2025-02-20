@@ -12,12 +12,12 @@ let orderSchema = mongoose.Schema({
     // unique: true
   },
   customer: { 
-      // type: mongoose.Schema.Types.ObjectId, 
-      // ref: 'Customer',  // อ้างอิงไปที่ Model 'Customer'
-      // required: true 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'accounts', 
+      required: true 
   },
   products: [{
-      // pid: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },  // อ้างอิงไปที่ Model 'Product'
+      //pid: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },  // อ้างอิงไปที่ Model 'Product'
       // quantity: { type: Number, required: true }, 
       // price: { type: Number, required: true }
   }],

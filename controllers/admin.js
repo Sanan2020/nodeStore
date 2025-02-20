@@ -1,22 +1,35 @@
 const Product = require('../models/products')
 const Order = require('../models/orders')
 
-exports.getDashboard = (req,res)=>{
-    Product.find({}).exec().then(doc => {
-        res.render('admin/dashboard',{products:doc})
-    }).catch(err => {console.error('Error:', err);});
+exports.getDashboard = async (req,res)=>{
+    try{
+        const products = await Product.find({}).exec();
+        res.render('admin/dashboard',{ products })
+    }catch (err) {
+        console.error('Error:', err);
+        res.status(500).send("เกิดข้อผิดพลาดในการเรียกดูสินค้า");
+    }
 }
 
 exports.getPending = async (req,res)=>{
-    // Order.find({status:'pending'}).exec().then(doc => {
-    //     res.render('admin/pendingOrder',{order:doc})
-    // }).catch(err => {console.error('Error:', err);});
-    const orders = await Order.find({ status: "Pending" });
-    res.render("admin/pendingOrder", { order: orders });
+    // const orders = await Order.find({ status: "Pending" });
+    // const orders = await Order.findById('67b60a6d3256e4cdfa1d3d04').populate("customer");
+    try{
+        const orders = await Order.find().populate("customer"); 
+        console.log(orders)
+        res.render("admin/pendingOrder", { orders });
+    }catch (err) {
+        console.error('Error:', err);
+        res.status(500).send("เกิดข้อผิดพลาดในการเรียกดูออเดอร์");
+    }
 }
 
 exports.getInsertProduct = (req,res)=>{
-    res.render('admin/insertProduct')
+    try {
+        res.render('admin/insertProduct');
+    } catch (error) {
+        console.error("Error rendering insertProduct:", error);
+    }
 }
 
 exports.postInsertProduct = async (req,res)=>{
@@ -26,40 +39,61 @@ exports.postInsertProduct = async (req,res)=>{
         }
         
         let data = new Product({
-        pid:'1010',
         name:req.body.name,
         price:req.body.price,
         image:req.file.filename,
         description:req.body.description
         })
         await Product.seveProduct(data)
+        req.flash("insert", "เพิ่มสินค้าเรียบร้อยแล้ว!");
         res.redirect('/dashboard')
-    }catch(err){console.error('Error saving user:', err);}
-}
-
-exports.postEditProduct = (req,res)=>{
-    const edit_id = req.body.edit_id
-    Product.findOne({_id:edit_id}).exec().then(doc => {
-        res.render('admin/editProduct',{product:doc})
-    }).catch(err => {console.error('Error:', err);});
-}
-
-exports.postUpdateProduct = (req,res)=>{
-    const update_id = req.body.update_id
-    let data = {
-        name:req.body.name,
-        price:req.body.price,
-        // image:req.file.filename,
-        description:req.body.description
+    }catch(err){
+        console.error('Error saving user:', err);
+        res.status(500).send("เกิดข้อผิดพลาดในการเพิ่มสินค้า");
     }
-    console.log(data)
-    Product.findByIdAndUpdate(update_id,data,{useeFindAndModify:false}).exec().then(doc => {
-        res.redirect('/dashboard');
-    }).catch(err => {console.error('Error:', err);});
 }
 
-exports.getDeleteProduct = (req,res)=>{
-    Product.findByIdAndDelete(req.params.id,{useeFindAndModify:false}).exec().then(doc => {
+exports.postEditProduct = async (req,res)=>{
+    try{
+        const edit_id = req.body.edit_id
+        const product = await Product.findOne({_id:edit_id}).exec()
+        res.render('admin/editProduct',{ product })
+    } catch (error) {
+        console.error("Error rendering editProduct:", error);
+        res.status(500).send("เกิดข้อผิดพลาดในการโหลดหน้า");
+    }
+}
+
+exports.postUpdateProduct = async (req,res)=>{
+    try{
+        const update_id = req.body.update_id
+
+        let _image = req.body.old_image
+        if (req.file) {
+        _image = req.file.filename;
+        }
+        let data = {
+            name:req.body.name,
+            price:req.body.price,
+            image:_image,
+            description:req.body.description
+        }
+        console.log(data)
+        await Product.findByIdAndUpdate(update_id,data,{useeFindAndModify:false}).exec();
+        req.flash("edit", "แก้ไขสินค้าเรียบร้อยแล้ว!");
+        res.redirect('/dashboard');
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).send("เกิดข้อผิดพลาดในการแก้ไขสินค้า");
+    }
+}
+
+exports.getDeleteProduct = async (req,res)=>{
+    try{
+        await Product.findByIdAndDelete(req.params.id,{useeFindAndModify:false}).exec();
         res.redirect('/dashboard')
-    }).catch(err => {console.error('Error:', err);});
+    }catch (err) {
+        console.error('Error:', err);
+        res.status(500).send("เกิดข้อผิดพลาดในการลบสินค้า");
+    }
 }
