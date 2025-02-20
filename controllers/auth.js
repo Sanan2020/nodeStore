@@ -84,7 +84,7 @@ exports.postSignup = async (req, res) => {
             req.flash("success", "สมัครสมาชิกสำเร็จ!");
             res.redirect('/login');
         }else{
-            req.flash("error", "ไม่สามารถใช้บัญชีนี้ได้!");
+            req.flash("error", "บัญชีนี้ถูกใช้แล้ว!");
             res.redirect('/signup');
         }
     } catch (error) {

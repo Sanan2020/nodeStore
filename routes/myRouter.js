@@ -3,26 +3,6 @@ const router = express.Router()
 const upload = require("../middlewares/upload");
 require('dotenv').config(); //++
 
-const Order = require('../models/orders')
-router.get('/pop', async (req, res) => {
-    // const order = await Order.findById('67b60a6d3256e4cdfa1d3d04').populate("customer");
-    const orders = await Order.find().populate("customer"); // ดึงข้อมูลลูกค้า
-    console.log(orders)
-    res.render("admin/invoice", { orders });
-}); 
-router.get("/order/:id", async (req, res) => {
-    try {
-      const order = await Order.findById(req.params.id).populate("customer");
-      if (!order) {
-        return res.status(404).json({ error: "ไม่พบใบสั่งซื้อ" });
-      }
-      res.json(order);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "เกิดข้อผิดพลาด" });
-    }
-  });
-
 const authController = require('../controllers/auth')
 const adminController = require('../controllers/admin')
 const shopController = require('../controllers/shop')
@@ -58,6 +38,7 @@ router.get('/sessionAddtoCart', (req, res) => {
 
 router.get('/dashboard', adminMiddleware, adminController.getDashboard)
 router.get('/pending', adminMiddleware, adminController.getPending)
+router.get("/order/:id", adminMiddleware, adminController.getOeder)
 router.get('/insert', adminMiddleware, adminController.getInsertProduct)
 router.post('/insert', adminMiddleware, upload.single("image"), adminController.postInsertProduct)
 router.post('/edit', adminMiddleware, adminController.postEditProduct)

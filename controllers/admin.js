@@ -24,6 +24,19 @@ exports.getPending = async (req,res)=>{
     }
 }
 
+exports.getOeder = async (req,res)=>{
+    try {
+        const order = await Order.findById(req.params.id).populate("customer");
+        if (!order) {
+            return res.status(404).json({ error: "ไม่พบใบสั่งซื้อ" });
+        }
+        res.json(order);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "เกิดข้อผิดพลาด" });
+    }
+}
+
 exports.getInsertProduct = (req,res)=>{
     try {
         res.render('admin/insertProduct');

@@ -34,8 +34,6 @@ let orderSchema = mongoose.Schema({
 })
 // สร้าง Model
 let Order = mongoose.model("orders",orderSchema)
-
-// ส่งออก Model
 module.exports = Order;
 
 //ออกแบบฟังก์ชันบันทึกข้อมมูล

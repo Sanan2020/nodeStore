@@ -39,9 +39,14 @@ exports.getCart = (req,res)=>{
 }
 
 exports.getCheckout = async (req,res)=>{ 
-    const customer = await Account.findById(loggedIn);
-    console.log(customer)
-    res.render('shop/checkout', {customer})
+    try{
+        const customer = await Account.findById(loggedIn);
+        console.log(customer)
+        res.render('shop/checkout', {customer})
+    } catch (error) {
+        console.error("Error fetching checkout:", error);
+        res.status(500).send("เกิดข้อผิดพลาดในการโหลด checkout");
+    }
 }
 
 exports.postCheckout = async (req,res)=>{ 
@@ -123,40 +128,44 @@ exports.postCheckout = async (req,res)=>{
 }
 
 exports.postWebhook = async (request, response) => {
-    // let event = request.body;
-    let event;
-    // Only verify the event if you have an endpoint secret defined.
-    // Otherwise use the basic event deserialized with JSON.parse
-    if (endpointSecret) {
-      // Get the signature sent by Stripe
-      const signature = request.headers['stripe-signature'];
-      try {
-        event = stripe.webhooks.constructEvent(request.body, signature, endpointSecret);
-      } catch (err) {
-        console.log(`Webhook signature verification failed.`, err.message);
-        return response.sendStatus(400);
-      }
+    try{
+        // let event = request.body;
+        let event;
+        // Only verify the event if you have an endpoint secret defined.
+        // Otherwise use the basic event deserialized with JSON.parse
+        if (endpointSecret) {
+            // Get the signature sent by Stripe
+            const signature = request.headers['stripe-signature'];
+            try {
+                event = stripe.webhooks.constructEvent(request.body, signature, endpointSecret);
+            } catch (err) {
+                console.log(`Webhook signature verification failed.`, err.message);
+                return response.sendStatus(400);
+            }
+        }
+        // Handle the event
+        //case 'payment_intent.succeeded':
+        switch (event.type) {
+            case 'checkout.session.completed':  
+                const paymentIntent = event.data.object;  
+                console.log(paymentIntent);
+                const sessionId = paymentIntent.id;
+                const status = paymentIntent.status;
+                const result = await Order.findOneAndUpdate({sessionId: sessionId}, {"payment.status": status }, { new: true });
+                console.log(result);
+                // Then define and call a method to handle the successful payment intent.
+                // handlePaymentIntentSucceeded(paymentIntent);
+            break;
+            default:
+                // Unexpected event type
+                console.log(`Unhandled event type ${event.type}.`);
+        }
+        // Return a 200 response to acknowledge receipt of the event
+        response.send();
+    } catch (error) {
+        res.status(500).json({ message: "เกิดข้อผิดพลาด", error });
     }
-    // Handle the event
-    //case 'payment_intent.succeeded':
-    switch (event.type) {
-        case 'checkout.session.completed':  
-            const paymentIntent = event.data.object;  
-            console.log(paymentIntent);
-            const sessionId = paymentIntent.id;
-            const status = paymentIntent.status;
-            const result = await Order.findOneAndUpdate({sessionId: sessionId}, {"payment.status": status }, { new: true });
-            console.log(result);
-            // Then define and call a method to handle the successful payment intent.
-            // handlePaymentIntentSucceeded(paymentIntent);
-        break;
-        default:
-            // Unexpected event type
-            console.log(`Unhandled event type ${event.type}.`);
-    }
-    // Return a 200 response to acknowledge receipt of the event
-    response.send();
-  }
+}
 
 exports.getWebhookSuccess = async (req, res)=>{
     try {

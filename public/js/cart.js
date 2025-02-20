@@ -5,19 +5,19 @@ $(document).ready(function() {
 
 function processSwal(label){
   let timerInterval;
-Swal.fire({
-  icon:'success',
-  timer: 1000,
-  showConfirmButton: false,
-  willClose: () => {
-    clearInterval(timerInterval);
-  }
-}).then((result) => {
-  if (result.dismiss === Swal.DismissReason.timer) {
-    console.log("I was closed by the timer");
-    $('#count').html(label);
-  }
-});
+  Swal.fire({
+    icon:'success',
+    timer: 1000,
+    showConfirmButton: false,
+    willClose: () => {
+      clearInterval(timerInterval);
+    }
+  }).then((result) => {
+    if (result.dismiss === Swal.DismissReason.timer) {
+      console.log("I was closed by the timer");
+      $('#count').html(label);
+    }
+  });
 }
 
 async function addtocart(item){
@@ -36,18 +36,19 @@ async function addtocart(item){
       pass = false;
     }
   }
+
   console.log(itemToOBJ);
   if(pass){
-  var obj = {
-        id: itemToOBJ._id,
-        name:itemToOBJ.name,
-        description:itemToOBJ.description,
-        price:itemToOBJ.price,
-        image:itemToOBJ.image,
-        count: 1,
-      };
-      cartLocal.push(obj);
-    }
+    var obj = {
+      id: itemToOBJ._id,
+      name:itemToOBJ.name,
+      description:itemToOBJ.description,
+      price:itemToOBJ.price,
+      image:itemToOBJ.image,
+      count: 1,
+    };
+    cartLocal.push(obj);
+  }
   
   localStorage.setItem('cartLocal', JSON.stringify(cartLocal));
   processSwal(cartLocal.length);
@@ -61,7 +62,7 @@ async function addtocart(item){
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-          window.location.href = "/login";
+        window.location.href = "/login";
       }
     });
   }
@@ -78,7 +79,6 @@ function cartRemoveitem(removeId){
 }
 
 function cartUpdateitem(){
-  // console.log('process.....');
   let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
   if (cartLocal.length > 0) {
     let cartHTML = '';
@@ -96,7 +96,7 @@ function cartUpdateitem(){
                       <td class="tdrm"><a class="btn btn-danger btn-rm" onclick="cartRemoveitem('${item.id}');">X</a></td>
                     </tr>
                     `;
-        sumTotal += (item.price * item.count);
+      sumTotal += (item.price * item.count);
     });
     $("#NotcartItems").css('display','none');
     $("#cartItems").html(cartHTML);
@@ -134,9 +134,8 @@ function quantityCount(countId, price){
   $('.tdtotal').each(function() {
     var text = $(this).text().replace('฿', '').trim();
     var integer = parseInt(text, 10);
-    // alert(integer);
     sumTotal += integer;
- });
+  });
  
   $('#sumTotal').html('฿'+sumTotal);
   $('#btnSumTotal').html('฿'+sumTotal);

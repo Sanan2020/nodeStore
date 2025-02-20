@@ -41,25 +41,6 @@
         .login-container .btn {
             width: 100%;
         }
-
-        .footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            padding: 20px 0;
-            background-color: #343a40;
-            color: white;
-        }
-
-        .footer a {
-            color: #f8f9fa;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -70,23 +51,25 @@
         </script>
       <% } %>
 
-    <!-- Login -->
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>เข้าสู่ระบบ Admin</h2>
         <form id="login-form" action="/adminLogin" method="post">
             <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+                <label for="email" class="form-label">อีเมล</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="ป้อนอีเมล" required>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                <label for="password" class="form-label">รหัสผ่าน</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="ป้อนหัสผ่าน" required>
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">เข้าสู่ระบบ Admin</button>
             </div>
-
         </form>
+
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="/">กลับสู่หน้าหลัก</a>
+        </div>
     </div>
 </body>
 </html>

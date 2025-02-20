@@ -1,13 +1,14 @@
 const Account = require('../models/accounts.js')
 
-module.exports = (req, res, next) =>{
-    Account.findById(req.session.customerId).then((customer) =>{
+module.exports = async (req, res, next) =>{
+    try{
+        const customer = await Account.findById(req.session.customerId)
         if(!customer){
             return res.redirect('/')
         }
         console.log('Customer logged in successfully')
         next()
-    }).catch(error => {
-        console.error(error)
-    });
+    } catch (error) {
+        res.status(500).json({ message: "เกิดข้อผิดพลาด", error });
+    }
 }

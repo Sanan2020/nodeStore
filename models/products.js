@@ -6,10 +6,8 @@ let productSchema = mongoose.Schema({
     image:String,
     description:String
 })
-// สร้าง Model
-let Product = mongoose.model("products",productSchema)
 
-// ส่งออก Model
+let Product = mongoose.model("products",productSchema)
 module.exports = Product;
 
 //ออกแบบฟังก์ชันบันทึกข้อมมูล
