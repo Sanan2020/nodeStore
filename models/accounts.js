@@ -1,6 +1,6 @@
 const mongoose = require("../config/database");
 // const Schema = mongoose.Schema
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 // ออกแบบ Schema
 // const customerSchema = new Schema({
 let accountSchema = mongoose.Schema({

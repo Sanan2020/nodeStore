@@ -1,5 +1,5 @@
 const Account = require('../models/accounts')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 exports.getLogin = (req, res) =>{
     res.render('auth/login')
