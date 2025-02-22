@@ -4,7 +4,7 @@ const router = require('./routes/Router')
 const app = express()
 const port = process.env.PORT || 4000;
 const session = require('express-session')
-const flash = require("connect-flash");//++
+const flash = require("connect-flash");
 global.loggedIn = null
 
 // app.use(express.json()) //++
