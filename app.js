@@ -7,7 +7,6 @@ const session = require('express-session')
 const flash = require("connect-flash");
 global.loggedIn = null
 
-// app.use(express.json()) //++
 // ตั้งค่า session middleware
 app.use(session({
     secret: "mysecretkey",  // 🔑 ใช้สำหรับเข้ารหัส session
