@@ -1,5 +1,5 @@
 const mongoose = require("../config/database");
-// ออกแบบ Schema
+
 let orderSchema = mongoose.Schema({
   orderId: {
       type: Number,
