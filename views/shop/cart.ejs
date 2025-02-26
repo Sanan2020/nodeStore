@@ -3,22 +3,6 @@
 </head>
 
 <body>
-    <!-- <div style="margin-top: 105px; background: #000;"></div> -->
-    <!-- <div style="margin-top: 5%;"></div> -->
-    <!-- <div id="NotcartItems" style="margin-top: auto; display: flex; justify-content: center; align-items: center; height: 100%; background: #000;" >
-        <div style="width: 100%; height: 20%; background: #d4c0c0;">
-            
-            <div style="display: flex; justify-content: center; margin-bottom: 10px;">
-                <h3>Cart is&nbsp;</h3><h3 style="color: orangered;">Enpty!</h3>
-            </div>
-            
-            <div style="display: flex; justify-content: center;">
-                <a href="/" style="background: #ff4500; color: #f3f2f2;" class="btn">Go home</a>
-            </div>
-            
-        </div>
-    </div> -->
-
     <div id="NotcartItems" style="margin-top: auto; justify-content: center;">
         <div>
             
@@ -52,21 +36,6 @@
                     <tbody id="cartItems">
                     </tbody>
                 </table><br><br>
-
-                <script>
-                    function count() {
-                        var productPrice1 = document.getElementById("price1").textContent;
-                        var cleanedPrice = productPrice1.replace(/[^\d.-]/g, ''); // กำจัดตัวอักษรที่ไม่ใช่ตัวเลขหรือจุด
-                        var priceAsDecimal = parseFloat(cleanedPrice);
-                        // alert(priceAsDecimal);
-
-                        var quantity = document.getElementById("quantity-1").value;
-                        var total = priceAsDecimal * quantity;
-                        // alert(total);
-                        document.getElementById("total-price1").textContent = "$" + total.toFixed(2);
-                    }
-                </script>
-
             </div>
 
             <div class="col-xl-4 custom-mt">
@@ -98,58 +67,6 @@
         </div>
     </div>
 
-    <!------------------------------------------------------------ รอแก้ไข -------------------------------------------------------------->
-
-    <script>
-        // Dummy cart item management logic
-        let productPrice = 99.99; // Static price for this example
-
-        // Remove item function
-        function removeItem(itemId) {
-            var item = document.getElementById(itemId);
-            item.remove();
-            updateTotal();
-        }
-        // Update item quantity and recalculate total price
-        function updateQuantity(itemId) {
-            var quantity = document.getElementById("quantity-" + itemId.split('-')[2]).value;
-            var total = productPrice * quantity;
-            updateTotal();
-        }
-
-        // Update total price, shipping, discount, and final total
-        function updateTotal() {
-            // Get quantity from the cart item
-            var quantity = document.getElementById("quantity-1").value;
-            var productTotal = productPrice * quantity;
-
-            // Get shipping cost
-            var shippingCost = parseFloat(document.getElementById("shipping-method").value);
-
-            // Apply discount if any
-            var discount = parseFloat(document.getElementById("discount-code").value) || 0;
-            var discountedTotal = productTotal - discount;
-
-            // Calculate final total
-            var finalTotal = discountedTotal + shippingCost;
-
-            // Update the UI with totals
-            document.getElementById("total-price").textContent = "$" + productTotal.toFixed(2);
-            document.getElementById("discounted-price").textContent = "$" + discountedTotal.toFixed(2);
-            document.getElementById("shipping-cost").textContent = "$" + shippingCost.toFixed(2);
-            document.getElementById("final-total").textContent = "$" + finalTotal.toFixed(2);
-        }
-
-        // Apply discount code (for simplicity, discount code is just a number)
-        function applyDiscount() {
-            var discountCode = document.getElementById("discount-code").value;
-            if (discountCode) {
-                // Assume the discount code gives a discount of entered value
-                updateTotal();
-            }
-        }
-    </script>
-    <!------------------------------------------------------------ รอแก้ไข -------------------------------------------------------------->
     <%- include('../includes/footer') %>
 </body>
 </html>

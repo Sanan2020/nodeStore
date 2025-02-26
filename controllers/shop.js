@@ -133,8 +133,6 @@ exports.postWebhook = async (request, response) => {
     try{
         // let event = request.body;
         let event;
-        // Only verify the event if you have an endpoint secret defined.
-        // Otherwise use the basic event deserialized with JSON.parse
         if (endpointSecret) {
             // Get the signature sent by Stripe
             const signature = request.headers['stripe-signature'];
