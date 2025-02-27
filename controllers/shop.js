@@ -2,11 +2,10 @@ const Product = require('../models/products')
 const Account = require('../models/accounts')
 const Order = require('../models/orders')
 const mongoose = require("mongoose");
+require('dotenv').config();
+endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
+BASE_URL = "http://localhost:4000";
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-// const endpointSecret = 'whsec_db80efa46961b7814cf20581d0a7533afe2b076f8055e1f038aff5d64caf3233';
-// const BASE_URL = "http://localhost:4000";
-const endpointSecret = 'whsec_RCewCZqDbDrOHrltCklQ1VdoUOFlq4dX'
-BASE_URL = 'https://nodestore-v9a4.onrender.com'
 
 exports.getProducts = async (req, res) =>{
     try {
@@ -38,6 +37,13 @@ exports.getProduct = async (req,res)=>{
 
 exports.getCart = (req,res)=>{ 
     res.render('shop/cart')
+}
+
+exports.getAddtocart = (req, res) => {
+    if (!req.session.customerId) {
+        return res.json({ loggedIn: false });
+    }
+    res.json({ loggedIn: true, customerId: req.session.customerId });
 }
 
 exports.getCheckout = async (req,res)=>{ 

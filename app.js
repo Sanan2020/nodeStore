@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const router = require('./routes/Router')
+const router = require('./routes/router')
 const app = express()
 const port = process.env.PORT || 4000;
 const session = require('express-session')
@@ -18,7 +18,7 @@ app.use('*', (req, res, next) =>{
     loggedIn = req.session.customerId
     next()
 })
-app.use(flash()); //++
+app.use(flash());
 app.use((req, res, next) => {
     res.locals.messages = req.flash(); // กำหนด messages ให้ใช้งานใน EJS
     next();

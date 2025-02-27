@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const upload = require("../middlewares/upload");
-require('dotenv').config(); //++
+require('dotenv').config();
 
 const authController = require('../controllers/auth')
 const adminController = require('../controllers/admin')
@@ -28,13 +28,8 @@ router.get('/checkout', authMiddleware, shopController.getCheckout)
 router.post('/checkout', authMiddleware, express.json(), shopController.postCheckout);
 router.post('/webhook', express.raw({type: 'application/json'}), shopController.postWebhook);
 router.get('/success', shopController.getWebhookSuccess)
-router.get('/cancel', shopController.getWebhookCancel)   
-router.get('/sessionAddtoCart', (req, res) => {
-    if (!req.session.customerId) {
-        return res.json({ loggedIn: false });
-    }
-    res.json({ loggedIn: true, customerId: req.session.customerId });
-});   
+router.get('/cancel', shopController.getWebhookCancel)
+router.get('/sessionAddtoCart', shopController.getAddtocart)
 
 router.get('/dashboard', adminMiddleware, adminController.getDashboard)
 router.get('/pending', adminMiddleware, adminController.getPending)

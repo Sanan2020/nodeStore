@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-mongoose.connect('mongodb+srv://admin:123456789123@cluster0.wty1w.mongodb.net/productDB')
-  .then(() => {
-    console.log('Database connected successfully');
-  })
-  .catch(err => {
-    console.log('Database connection error: ', err);
-  });
+
+try {
+  mongoose.connect(process.env.MONGO_URI)
+  console.log("Database Connected");
+} catch (error) {
+  console.error("Database Connection Error:", error);
+}
 
 module.exports = mongoose;
