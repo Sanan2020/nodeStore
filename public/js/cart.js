@@ -78,8 +78,8 @@ function cartRemoveitem(removeId){
   cartUpdateitem();
 }
 
-function cartUpdateitem(){
-  let cartLocal = JSON.parse(localStorage.getItem('cartLocal')) || [];
+async function cartUpdateitem(){
+  let cartLocal = await JSON.parse(localStorage.getItem('cartLocal')) || [];
   if (cartLocal.length > 0) {
     let cartHTML = '';
     let sumTotal =0;
