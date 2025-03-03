@@ -1,6 +1,6 @@
 var data;
 $(document).ready(function() {
-  cartUpdateitem();
+  // cartUpdateitem();
 });
 
 function processSwal(label){
