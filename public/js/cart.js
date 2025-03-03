@@ -96,7 +96,7 @@ async function cartUpdateitem(){
         </tr>
     `;
 
-    cartLocal.forEach(function(item) {
+    cartLocal.forEach((item) => {
       cartHTML += `
                    <tr>
                       <td class="tdimg"><img src="/image/${item.image}" class="c-img"></td>
