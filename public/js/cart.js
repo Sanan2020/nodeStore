@@ -80,6 +80,7 @@ function cartRemoveitem(removeId){
 
 async function cartUpdateitem(){
   let cartLocal = await JSON.parse(localStorage.getItem('cartLocal')) || [];
+  const cartItemsContainer = document.getElementById("cartItems");
   if (cartLocal.length > 0) {
     let cartHTML = '';
     let sumTotal =0;
@@ -110,7 +111,8 @@ async function cartUpdateitem(){
       sumTotal += (item.price * item.count);
     });
     $("#NotcartItems").css('display','none');
-    $("#cartItems").html(cartHTML);
+    // $("#cartItems").html(cartHTML);
+    cartItemsContainer.innerHTML = cartHTML;
     $('#count').html(cartLocal.length);
     //sumTotal
     $('#sumTotal').html('฿'+sumTotal);
