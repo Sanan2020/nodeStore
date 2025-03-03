@@ -5,17 +5,45 @@
 <body>
     <div id="NotcartItems" style="margin-top: auto; justify-content: center;">
         <div>
-            
+
             <div style="display: flex; justify-content: center; margin-bottom: 10px;">
-                <h3>Cart is&nbsp;</h3><h3 style="color: orangered;">Enpty!</h3>
+                <h3>Cart is&nbsp;</h3>
+                <h3 style="color: orangered;">Enpty!</h3>
             </div>
-            
+
             <div style="display: flex; justify-content: center;">
                 <a href="/" style="background: #ff4500; color: #f3f2f2;" class="btn">Go home</a>
             </div>
-            
+
         </div>
     </div>
+
+    <!--  -->
+    <style>
+        .loadingScreen {
+            position: absolute;
+            z-index: 5;
+            width: 100%;
+            height: 100vh;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
+    <div class="loadingScreen">
+        <!--My content is the word "soundscape" but the o is replaced with a disc-->
+        <h1>S<img src="compact-disc-with-glare.png" alt="disc" />undscape</h1>
+    </div>
+
+    <script>
+        var loadingScreen = document.querySelector(".loadingScreen");
+        window.addEventListener('load', function () {
+            loadingScreen.style.display = 'none';
+        })
+    </script>
+    <!--  -->
 
     <!-- Shopping Cart Section -->
     <div id="tbn" class="container" style="margin-top: 10vh;">
@@ -32,7 +60,7 @@
                         <th>รวม</th>
                         <th></th>
                     </tr>
-                    
+
                     <tbody id="cartItems">
                     </tbody>
                 </table><br><br>
@@ -41,7 +69,8 @@
             <div class="col-xl-4 custom-mt">
                 <div class="con">
                     <div style="display: flex;">
-                        <h4 id="sumList"></h4><h4>&nbsp;รายการ</h4>
+                        <h4 id="sumList"></h4>
+                        <h4>&nbsp;รายการ</h4>
                     </div>
 
                     <div style="display: flex; justify-content: space-between;">
@@ -55,7 +84,7 @@
                     <hr>
                     <p>ยอดรวมทั้งหมด</p>
                     <div style="display: flex; justify-content: center;">
-                        <a  href="/checkout" class="btn-command" style="text-decoration: none; cursor: pointer;">
+                        <a href="/checkout" class="btn-command" style="text-decoration: none; cursor: pointer;">
                             <div class="des">ชำระเงิน</div>
                             <div id="btnSumTotal" class="des">฿487.00</div>
                         </a>
@@ -69,4 +98,5 @@
 
     <%- include('../includes/footer') %>
 </body>
+
 </html>
