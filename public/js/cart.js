@@ -86,7 +86,7 @@ async function cartUpdateitem(){
 
      cartHTML = `
         <tr>
-            <th colspan="2">สินค้า</th>
+            <th colspan="2">สินค้า.</th>
             <th>ราคา</th>
             <th>จำนวน</th>
             <th>รวม</th>
