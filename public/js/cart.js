@@ -80,7 +80,6 @@ function cartRemoveitem(removeId){
 
 async function cartUpdateitem(){
   let cartLocal = await JSON.parse(localStorage.getItem('cartLocal')) || [];
-  setTimeout(() => {
   const cartItemsContainer = document.getElementById("cartItems");
   if (cartLocal.length > 0) {
     let cartHTML = '';
@@ -99,7 +98,7 @@ async function cartUpdateitem(){
     cartLocal.forEach((item) => {
       cartHTML += `
                    <tr>
-                      <td class="tdimg"><img src="/image/${item.image}" class="c-img" width="100" height="100"></td>
+                      <td class="tdimg"><img src="/image/${item.image}" class="c-img" width="12%" height="100"></td>
                       <td class="tdname"><div>${item.name}</div></td>
                       <td style="text-align: center;" id="price1" class="hide">฿${item.price}</td>
                       <td class="td-qt">
@@ -124,7 +123,6 @@ async function cartUpdateitem(){
       $("#NotcartItems").css('display','flex');
       $('#count').html('0');
     }
-  }, 0);
 }
 
 //quantitycount
