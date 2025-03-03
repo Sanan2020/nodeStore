@@ -1,6 +1,6 @@
 var data;
 $(document).ready(function() {
-  // cartUpdateitem();
+  cartUpdateitem();
 });
 
 function processSwal(label){
@@ -83,6 +83,17 @@ async function cartUpdateitem(){
   if (cartLocal.length > 0) {
     let cartHTML = '';
     let sumTotal =0;
+
+     cartHTML = `
+        <tr>
+            <th colspan="2">สินค้า</th>
+            <th>ราคา</th>
+            <th>จำนวน</th>
+            <th>รวม</th>
+            <th></th>
+        </tr>
+    `;
+
     cartLocal.forEach(function(item) {
       cartHTML += `
                    <tr>
