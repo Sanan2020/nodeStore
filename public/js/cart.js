@@ -80,14 +80,14 @@ function cartRemoveitem(removeId){
 
 async function cartUpdateitem(){
   let cartLocal = await JSON.parse(localStorage.getItem('cartLocal')) || [];
-  const cartItemsContainer = document.getElementById("cartItems");
+  // const cartItemsContainer = document.getElementById("cartItems");
   if (cartLocal.length > 0) {
     let cartHTML = '';
     let sumTotal =0;
 
      cartHTML = `
         <tr>
-            <th colspan="2">สินค้า.</th>
+            <th colspan="2">สินค้า</th>
             <th>ราคา</th>
             <th>จำนวน</th>
             <th>รวม</th>
@@ -95,10 +95,10 @@ async function cartUpdateitem(){
         </tr>
     `;
 
-    cartLocal.forEach((item) => {
+    cartLocal.forEach(function(item) {
       cartHTML += `
                    <tr>
-                      <td class="tdimg"><img src="/image/${item.image}" class="c-img" ></td>
+                      <td class="tdimg"><img class="c-img" width="200" height="200" src="/image/${item.image}"></td>
                       <td class="tdname"><div>${item.name}</div></td>
                       <td style="text-align: center;" id="price1" class="hide">฿${item.price}</td>
                       <td class="td-qt">
@@ -111,8 +111,8 @@ async function cartUpdateitem(){
       sumTotal += (item.price * item.count);
     });
     $("#NotcartItems").css('display','none');
-    // $("#cartItems").html(cartHTML);
-    cartItemsContainer.innerHTML = cartHTML;
+    $("#cartItems").html(cartHTML);
+    // cartItemsContainer.innerHTML = cartHTML;
     $('#count').html(cartLocal.length);
     //sumTotal
     $('#sumTotal').html('฿'+sumTotal);
